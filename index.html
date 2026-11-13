@@ -358,6 +358,20 @@ footer{background:var(--navy-3);color:#fff;padding:clamp(56px,7vw,88px) 0 28px}
 .foot ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .foot a{text-decoration:none;color:#fff}
 .foot a:hover{color:var(--mint)}
+.foot-legal{display:flex;gap:20px;flex-wrap:wrap}
+.foot-legal a{color:var(--on-navy-2);text-decoration:none}
+.foot-legal a:hover{color:#fff;text-decoration:underline;text-underline-offset:3px}
+.legal-note{font-size:14px;color:var(--slate);margin:14px 0 0}
+.legal-note a{color:var(--green-d)}
+.legal{max-width:760px;padding:clamp(40px,6vw,72px) 0 clamp(64px,8vw,110px)}
+.legal-date{font-size:14px;color:var(--slate);margin:0 0 8px}
+.legal h2{font-size:clamp(21px,2vw,25px);line-height:1.25;letter-spacing:-.01em;font-weight:750;color:var(--navy);margin:38px 0 10px}
+.legal p,.legal li{color:var(--ink);max-width:68ch}
+.legal p{margin:0 0 14px}
+.legal ul{margin:0 0 14px;padding-inline-start:22px}
+.legal li{margin:0 0 6px}
+.legal a{color:var(--green-d);text-underline-offset:3px}
+.legal bdi{white-space:nowrap}
 .foot-base{margin-top:clamp(40px,6vw,72px);padding-top:22px;border-top:1px solid rgba(255,255,255,.1);font-size:14px;color:var(--on-navy-2);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 @media (max-width:760px){.foot{grid-template-columns:1fr 1fr}.foot-brand,.foot-news{grid-column:1/-1}}
 
@@ -669,6 +683,7 @@ footer{background:var(--navy-3);color:#fff;padding:clamp(56px,7vw,88px) 0 28px}
         <button class="btn btn-green" type="submit" id="qSend"><span data-i18n="q_send">Send my request</span></button>
         <small data-i18n="q_hint">Nothing is sent until you press send inside WhatsApp.</small>
       </div>
+      <p class="legal-note">By sending, you agree to our <a href="#privacy">Privacy Policy</a> and <a href="#terms">Terms of Service</a>.</p>
       <div class="result-box" id="result" hidden>
         <p style="font-weight:700;font-size:18px" id="resultTitle" data-i18n="r_title">Thanks! We got your request.</p>
         <p class="muted" id="resultSub" data-i18n="r_sub">We'll get back to you on WhatsApp soon.</p>
@@ -688,6 +703,101 @@ footer{background:var(--navy-3);color:#fff;padding:clamp(56px,7vw,88px) 0 28px}
         <ol class="next"><li data-i18n="n1">We read your details and reply on WhatsApp.</li><li data-i18n="n2">We book a short call to understand your goals.</li><li data-i18n="n3">You receive a custom quote for your business.</li></ol>
       </div>
     </aside>
+  </div>
+</section>
+
+<!-- ================= PRIVACY POLICY ================= -->
+<section class="page" data-page="privacy" hidden>
+  <div class="navy page-head">
+    <div class="wrap">
+      <h1 class="h1">Privacy Policy</h1>
+      <p class="lead">What we collect when you use this website, why, and what you can ask us to do with it.</p>
+    </div>
+  </div>
+  <div class="wrap legal">
+    <p class="legal-date">Last updated: 13/11/2026</p>
+
+    <h2>Who we are</h2>
+    <p>One Way Media is a marketing agency based in Chiyah, Beirut, Lebanon. In this policy, "we" and "us" mean One Way Media. You can reach us any time on WhatsApp at <a class="wa-link" href="https://wa.me/96181576289" target="_blank" rel="noopener"><bdi dir="ltr" class="waText">+961 81 576 289</bdi></a>.</p>
+
+    <h2>What we collect</h2>
+    <p><b>When you ask for a quote.</b> The details you type into the quote form: your name, business name, phone number, type of business, the services you are interested in, your budget, your Instagram handle, when you would like to start and your message. We also note how you found us (for example Instagram or Google).</p>
+    <p><b>When you visit the website.</b> Simple visit statistics: the page you landed on, whether you came from Meta (Facebook or Instagram), Google, another website or a direct link, any campaign name in the link, and whether you are on a phone or a computer. To count visitors without counting the same person twice, your browser keeps a random ID that has nothing to do with your name or details. We do not use advertising cookies or tracking pixels on this website.</p>
+    <p><b>When you message us on WhatsApp.</b> Your messages and phone number reach us through WhatsApp, which is run by Meta under its own privacy policy.</p>
+
+    <h2>Why we use it</h2>
+    <ul>
+      <li>To reply to you, understand your business and prepare a quote.</li>
+      <li>To deliver the work you hire us for, and to send invoices and reminders.</li>
+      <li>To understand which channels bring visitors to our website, so we can improve it.</li>
+    </ul>
+    <p>We do not sell your information, and we do not share it with other businesses for their marketing.</p>
+
+    <h2>Where it is kept</h2>
+    <p>The website is hosted by GitHub Pages. Quote requests and visit statistics are stored in a secure database run by Supabase. Only the One Way Media team can read them, using a password-protected account. These providers may keep basic technical logs, such as IP addresses, to run and protect their services.</p>
+
+    <h2>How long we keep it</h2>
+    <p>We keep quote requests and client details for as long as we are talking or working together, and afterwards for as long as we need them for our records and invoices. Visit statistics are kept as general history. You can ask us to delete your details at any time.</p>
+
+    <h2>Your choices</h2>
+    <p>You can ask us what information we hold about you, ask us to correct it or ask us to delete it. Send us a message on WhatsApp and we will take care of it. You can also clear your browser's site data to remove the random visitor ID.</p>
+    <p>We aim to handle personal information in line with Lebanese Law No. 81 of 2018 on Electronic Transactions and Personal Data.</p>
+
+    <h2>Children</h2>
+    <p>Our services are for businesses. We do not knowingly collect information from anyone under 18.</p>
+
+    <h2>Changes</h2>
+    <p>If we change this policy, we will update it on this page and change the date at the top.</p>
+  </div>
+</section>
+
+<!-- ================= TERMS ================= -->
+<section class="page" data-page="terms" hidden>
+  <div class="navy page-head">
+    <div class="wrap">
+      <h1 class="h1">Terms of Service</h1>
+      <p class="lead">The terms for using this website and for working with One Way Media.</p>
+    </div>
+  </div>
+  <div class="wrap legal">
+    <p class="legal-date">Last updated: 13/11/2026</p>
+
+    <h2>About these terms</h2>
+    <p>These terms apply when you use this website or hire One Way Media ("we", "us") for filming, editing, content, social media management, paid ads or studio sessions. Anything we agree with you in writing for a specific project, such as a quote or invoice, applies on top of these terms. If the two differ, the written agreement wins.</p>
+
+    <h2>Quotes</h2>
+    <p>Information on this website is general. Prices and scope are confirmed only in a written quote. A quote is valid until the date shown on it. Sending a request through the website does not create an agreement. Work starts once you accept the quote and any agreed upfront payment is received.</p>
+
+    <h2>Payments</h2>
+    <p>Prices are in US dollars unless stated otherwise. Some projects are paid with a percentage upfront and the balance once the work is done. The amounts and due dates are shown on your invoice. If a payment is late, we may pause work until it is settled.</p>
+    <p>Ad budgets paid to platforms such as Meta or Google are separate from our fees unless your quote says otherwise.</p>
+
+    <h2>Approvals and publishing</h2>
+    <p>We share content with you for approval before it goes live. Once you approve it and it is scheduled, we publish it as agreed. Please check names, prices, offers and claims carefully when you approve. Changes after publishing may count as extra work.</p>
+
+    <h2>Your materials and accounts</h2>
+    <p>You confirm that you have the right to use any logos, photos, videos, music and information you give us. You are responsible for what your content says about your products and offers. Where you give us access to your pages or ad accounts, for example as a partner in Meta Business Suite, you can remove that access at any time.</p>
+
+    <h2>Ownership of the work</h2>
+    <p>Once the work is paid in full, you may use the final delivered content for your business. Raw footage, project files and unused material stay with us unless we agree otherwise in writing. We may show work we made for you in our portfolio and on our social media, unless you ask us not to.</p>
+
+    <h2>Studio sessions</h2>
+    <p>Studio sessions are booked in advance. If you need to change or cancel a session, tell us as early as possible. Any fees for late changes or cancellations will be stated in your quote.</p>
+
+    <h2>Results</h2>
+    <p>We work hard to grow your reach and sales, but results from content and ads depend on many things outside our control, including platform rules, competition and your offer. We do not guarantee specific numbers of views, followers, leads or sales.</p>
+
+    <h2>Limits of responsibility</h2>
+    <p>We are not responsible for outages, account restrictions or rule changes on platforms such as Instagram, Facebook, TikTok, YouTube, WhatsApp or Google. Our total responsibility for any project is limited to the fees you paid us for that project.</p>
+
+    <h2>Using this website</h2>
+    <p>Please do not misuse this website, send false requests or try to break it. The text, design, logo and work shown here belong to One Way Media or to our clients, and may not be copied without permission.</p>
+
+    <h2>Law</h2>
+    <p>These terms are governed by the laws of Lebanon, and the courts of Beirut have jurisdiction.</p>
+
+    <h2>Changes and contact</h2>
+    <p>We may update these terms from time to time. The date at the top shows the latest version. Questions? Message us on WhatsApp at <a class="wa-link" href="https://wa.me/96181576289" target="_blank" rel="noopener"><bdi dir="ltr" class="waText">+961 81 576 289</bdi></a>.</p>
   </div>
 </section>
 </main>
@@ -721,7 +831,7 @@ footer{background:var(--navy-3);color:#fff;padding:clamp(56px,7vw,88px) 0 28px}
         </div>
       </div>
     </div>
-    <div class="foot-base"><span data-i18n="rights">© 2026 One Way Media. All rights reserved.</span></div>
+    <div class="foot-base"><span data-i18n="rights">© 2026 One Way Media. All rights reserved.</span><span class="foot-legal"><a href="#privacy">Privacy Policy</a><a href="#terms">Terms of Service</a></span></div>
   </div>
 </footer>
 <a class="wa-float wa-link" href="https://wa.me/96181576289" target="_blank" rel="noopener" aria-label="WhatsApp"><svg aria-hidden="true"><use href="#ico-wa"/></svg></a>
@@ -1401,7 +1511,7 @@ function applyLang(l){
 
 
 /* ---------- layout from the dashboard (order + hidden sections) ---------- */
-var PAGES = ["home","services","work","quote"];
+var PAGES = ["home","services","work","quote","privacy","terms"];
 var PREVIEW = CONTENT.preview || null;
 (function(){ var Lo=CONTENT.layout||{}, ord=Lo.order||{};
   Object.keys(ord).forEach(function(pg){ var p=document.querySelector('.page[data-page="'+pg+'"]'); if(!p) return;
