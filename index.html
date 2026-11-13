@@ -621,6 +621,7 @@ footer{background:var(--navy-3);color:#fff;padding:clamp(56px,7vw,88px) 0 28px}
         <div class="field"><label for="q-biz"><span data-i18n="q_biz">Business name</span> <span class="req">*</span></label><input type="text" id="q-biz" autocomplete="organization"></div>
       </div>
       <div class="row2">
+        <div class="field"><label for="q-phone"><span data-i18n="q_phone">WhatsApp number</span> <span class="req">*</span></label><input type="tel" id="q-phone" autocomplete="tel" inputmode="tel" placeholder="+961 …" dir="ltr"></div>
         <div class="field"><label for="q-industry"><span data-i18n="q_ind">Industry</span> <span class="req">*</span></label>
           <select id="q-industry">
             <option value="" data-i18n="q_choose">Choose one</option>
@@ -633,7 +634,6 @@ footer{background:var(--navy-3);color:#fff;padding:clamp(56px,7vw,88px) 0 28px}
             <option value="personal" data-i18n="ind_personal">Personal brand</option>
             <option value="other" data-i18n="ind_other">Something else</option>
           </select></div>
-        <div class="field"><label for="q-ig" data-i18n="q_ig">Instagram handle</label><input type="text" id="q-ig" placeholder="@yourbrand" dir="ltr"></div>
       </div>
       <fieldset>
         <legend class="legend"><span data-i18n="q_svc">What can we help you with?</span> <span class="req">*</span></legend>
@@ -653,24 +653,28 @@ footer{background:var(--navy-3);color:#fff;padding:clamp(56px,7vw,88px) 0 28px}
           <label class="chip"><input type="radio" name="budget" id="b5" value="b5"><span data-i18n="b5">Not sure yet</span></label>
         </div>
       </fieldset>
-      <div class="field"><label for="q-when" data-i18n="q_when">When do you want to start?</label>
+      <div class="row2">
+        <div class="field"><label for="q-ig" data-i18n="q_ig">Instagram handle</label><input type="text" id="q-ig" placeholder="@yourbrand" dir="ltr"></div>
+        <div class="field"><label for="q-when" data-i18n="q_when">When do you want to start?</label>
         <select id="q-when">
           <option value="" data-i18n="q_choose">Choose one</option>
           <option value="w1" data-i18n="w_now">As soon as possible</option>
           <option value="w2" data-i18n="w_month">Within a month</option>
           <option value="w3" data-i18n="w_later">In 1 to 3 months</option>
         </select></div>
+      </div>
       <div class="field"><label for="q-msg" data-i18n="q_msg">Tell us more (optional)</label><textarea id="q-msg" data-i18n-ph="q_msg_ph" placeholder="What are you selling, and what would you like to improve?"></textarea></div>
       <p class="err" id="formErr" hidden></p>
       <div class="form-foot">
-        <button class="btn btn-green" type="submit"><svg aria-hidden="true"><use href="#ico-wa"/></svg><span data-i18n="q_send">Send on WhatsApp</span></button>
+        <button class="btn btn-green" type="submit" id="qSend"><span data-i18n="q_send">Send my request</span></button>
         <small data-i18n="q_hint">Nothing is sent until you press send inside WhatsApp.</small>
       </div>
       <div class="result-box" id="result" hidden>
-        <p style="font-weight:600" data-i18n="r_title">Your message is ready.</p>
-        <pre id="resultText"></pre>
+        <p style="font-weight:700;font-size:18px" id="resultTitle" data-i18n="r_title">Thanks! We got your request.</p>
+        <p class="muted" id="resultSub" data-i18n="r_sub">We'll get back to you on WhatsApp soon.</p>
+        <pre id="resultText" hidden></pre>
         <div class="cta-group">
-          <a class="btn btn-green btn-sm" id="resultLink" href="https://wa.me/96181576289" target="_blank" rel="noopener"><span data-i18n="r_open">Open WhatsApp</span></a>
+          <a class="btn btn-green btn-sm" id="resultLink" href="https://wa.me/96181576289" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#ico-wa"/></svg><span data-i18n="r_fast">Want a faster answer? Send it on WhatsApp</span></a>
           <button class="btn btn-ink btn-sm" type="button" id="copyMsg" data-i18n="r_copy">Copy message</button>
         </div>
       </div>
@@ -909,7 +913,7 @@ var I18N = {
   "wk_cta":"Your brand could be next.",
   "q_eyebrow":"Get a quote",
   "q_title":"Let's put together a quote for your business.",
-  "q_p":"Fill this in and WhatsApp opens with your details ready to send. Prefer to talk first? Message us directly.",
+  "q_p":"Fill this in and we'll get back to you on WhatsApp. Want an answer faster? You can send it to us on WhatsApp right after.",
   "q_name":"Your name",
   "q_biz":"Business name",
   "q_ind":"Industry",
@@ -940,10 +944,15 @@ var I18N = {
   "w_later":"In 1 to 3 months",
   "q_msg":"Tell us more (optional)",
   "q_msg_ph":"What are you selling, and what would you like to improve?",
-  "q_send":"Send on WhatsApp",
-  "q_hint":"Nothing is sent until you press send inside WhatsApp.",
-  "err_req":"Add your name, your business name and industry, and pick what we can help you with.",
-  "r_title":"Your message is ready. If WhatsApp didn't open, use the button below.",
+  "q_send":"Send my request",
+  "q_hint":"We reply on WhatsApp.",
+  "err_req":"Add your name, business name, WhatsApp number and industry, and pick what we can help you with.",
+  "q_phone":"WhatsApp number",
+  "r_sub":"We'll get back to you on WhatsApp soon.",
+  "r_fast":"Want a faster answer? Send it on WhatsApp",
+  "r_offline":"Your message is ready. Send it to us on WhatsApp.",
+  "m_phone":"WhatsApp",
+  "r_title":"Thanks! We got your request.",
   "r_open":"Open WhatsApp",
   "r_copy":"Copy message",
   "copied":"Copied",
@@ -1452,6 +1461,7 @@ function composeMessage(){
   var lines = [t("m_hi"), "",
     t("m_name")+": "+val("q-name"),
     t("m_biz")+": "+val("q-biz"),
+    t("m_phone")+": "+val("q-phone"),
     t("m_ind")+": "+optText("q-industry"),
     t("m_svc")+": "+svcs.join(", ")];
   if(b) lines.push(t("m_budget")+": "+t(b.value));
@@ -1467,14 +1477,24 @@ function composeMessage(){
 form.addEventListener("submit", function(e){
   e.preventDefault();
   var err = document.getElementById("formErr");
-  var ok = val("q-name") && val("q-biz") && val("q-industry") && document.querySelector('input[name="svc"]:checked');
+  var ok = val("q-name") && val("q-biz") && val("q-phone").replace(/\D/g,"").length>=6 && val("q-industry") && document.querySelector('input[name="svc"]:checked');
   if(!ok){ err.textContent = t("err_req"); err.hidden = false; return; }
   err.hidden = true;
   var url = composeMessage();
-  var res = document.getElementById("result"); res.hidden = false;
-  var a = document.createElement("a"); a.href = url; a.target = "_blank"; a.rel = "noopener";
-  document.body.appendChild(a); a.click(); a.remove();
-  res.scrollIntoView({behavior:"smooth", block:"nearest"});
+  var svcs = Array.prototype.slice.call(document.querySelectorAll('input[name="svc"]:checked')).map(function(c){ return t(c.value); });
+  var bud = document.querySelector('input[name="budget"]:checked');
+  var send = document.getElementById("qSend"); send.disabled = true;
+  var res = document.getElementById("result");
+  var done = function(saved){
+    send.disabled = false; res.hidden = false;
+    document.getElementById("resultTitle").textContent = saved ? t("r_title") : t("r_offline");
+    var sub = document.getElementById("resultSub"); sub.textContent = t("r_sub"); sub.hidden = !saved;
+    if(!saved){ var a = document.createElement("a"); a.href = url; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove(); }
+    res.scrollIntoView({behavior:"smooth", block:"nearest"});
+  };
+  var T = window.OWM_T;
+  if(!T || !T.request) { done(false); return; }
+  T.request({name:val("q-name"), business:val("q-biz"), phone:val("q-phone"), industry:optText("q-industry"), services:svcs.join(", "), budget:bud?t(bud.value):"", instagram:val("q-ig"), start:optText("q-when"), message:val("q-msg")}).then(done, function(){ done(false); });
 });
 function copyText(text, btn){
   var done = function(){ var old = btn.textContent; btn.textContent = t("copied"); setTimeout(function(){ btn.textContent = old; }, 1400); };
@@ -1488,6 +1508,33 @@ document.getElementById("copyNum").addEventListener("click", function(){ copyTex
 document.getElementById("copyMsg").addEventListener("click", function(){ copyText(document.getElementById("resultText").textContent, this); });
 };
 /* live content: the dashboard's Publish button updates this, so the page shows the latest version without re-uploading files */
+/* visitor stats: one record per visit (no cookies, no personal data), plus quote requests and WhatsApp clicks */
+(function(){
+  var U="https://ujhxnoamophssjykbcbi.supabase.co", K="sb_publishable_-WKi459DFcn8O9tvrAepiA_1z9dawIM";
+  var on=/^https?:$/.test(location.protocol) && /^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(U) && !!window.fetch;
+  var store=function(o,k,v){ try{ if(v===undefined) return o.getItem(k); o.setItem(k,v); }catch(e){ return null; } };
+  var rid=function(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,10); };
+  var owner=!!store(localStorage,"owm-auth") || /[?&]notrack\b/.test(location.search);
+  var q={}; location.search.replace(/^\?/,"").split("&").forEach(function(p){ var x=p.split("="); if(x[0]) q[decodeURIComponent(x[0]).toLowerCase()]=decodeURIComponent((x[1]||"").replace(/\+/g," ")); });
+  var rh=""; try{ rh=document.referrer?new URL(document.referrer).hostname.replace(/^www\./,""):""; }catch(e){} if(rh===location.hostname) rh="";
+  var us=(q.utm_source||"").toLowerCase();
+  var src = (q.fbclid || /^(facebook|fb|instagram|ig|meta|messenger)/.test(us) || /(^|\.)(facebook|instagram|messenger)\.com$|(^|\.)fb\.(com|me)$/.test(rh)) ? "meta"
+          : (q.gclid || q.gbraid || q.wbraid || /^(google|youtube)/.test(us) || /(^|\.)google\.[a-z.]+$|(^|\.)youtube\.com$/.test(rh)) ? "google"
+          : (us || rh) ? "other" : "direct";
+  var ses=store(sessionStorage,"owm-ses"), first=!ses;
+  if(first){ ses=rid(); store(sessionStorage,"owm-ses",ses); store(sessionStorage,"owm-src",src); store(sessionStorage,"owm-ref",rh||us); }
+  else { src=store(sessionStorage,"owm-src")||src; rh=store(sessionStorage,"owm-ref")||""; }
+  var vis=store(localStorage,"owm-vis"); if(!vis){ vis=rid(); store(localStorage,"owm-vis",vis); }
+  var dev=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)?"mobile":"desktop";
+  var post=function(table,row){ return fetch(U+"/rest/v1/"+table,{method:"POST",keepalive:true,headers:{apikey:K,Authorization:"Bearer "+K,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify(row)}); };
+  var ev=function(type){ if(!on||owner) return; post("site_events",{type:type,visitor:vis,session:ses,source:src,ref_host:(rh||"").slice(0,120),campaign:(q.utm_campaign||"").slice(0,120),page:(location.hash||"#home").slice(0,60),device:dev}).catch(function(){}); };
+  window.OWM_T={
+    request:function(r){ if(!on) return Promise.reject(); r.source=src; r.visitor=vis;
+      return post("quote_requests",r).then(function(x){ if(!x.ok) throw 0; ev("quote"); return true; }); }
+  };
+  if(first) ev("visit");
+  document.addEventListener("click",function(e){ var a=e.target.closest&&e.target.closest('a[href*="wa.me/"]'); if(a) ev("wa_click"); },true);
+})();
 (function(){
   var U="https://ujhxnoamophssjykbcbi.supabase.co", K="sb_publishable_-WKi459DFcn8O9tvrAepiA_1z9dawIM", d=document.documentElement, started=false;
   function start(){ if(started) return; started=true; try{ window.__owmBoot(); } finally { d.className=d.className.replace(/\s*owm-wait/g,""); } }
