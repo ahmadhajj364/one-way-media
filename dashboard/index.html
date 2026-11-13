@@ -195,6 +195,7 @@ select.ctl,input.ctl{height:38px;border:1px solid var(--line-2);border-radius:8p
 .items-h{display:grid;grid-template-columns:minmax(0,1fr) 62px 96px 108px 88px 32px;gap:8px;font-size:12px;color:var(--muted);font-weight:600}
 .items-h span:nth-child(5){text-align:end}
 .fee-pair{display:grid;grid-template-columns:minmax(0,1fr) 118px;gap:8px}
+.cost-edit{gap:5px;flex:none}
 .item .it-b{width:100%;border:1px solid var(--line-2);border-radius:8px;background:var(--surface);padding:0 8px;height:38px;font:inherit;font-size:14px;color:var(--text)}
 .item .it-b:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px var(--green-soft)}
 .totals .once-line{color:var(--blue);font-weight:600}
@@ -2272,10 +2273,10 @@ function costsSection(ws,ym){
     if(ym>YM) st='<span class="small muted">Due '+fmtD(d)+'</span>';
     else if(pd) st='<button class="pill green pill-btn" data-act="fixPaid" data-id="'+f.id+'" data-m="'+ym+'" title="Click to undo">'+ico("check")+'Paid '+fmtD(pd)+'</button>';
     else st='<button class="btn sm'+(late?' danger-soft':'')+'" data-act="fixPaid" data-id="'+f.id+'" data-m="'+ym+'">'+ico("check")+'Mark paid</button>';
-    return '<div class="li fx-row"><div class="li-main" data-act="editFixed" data-id="'+f.id+'" style="cursor:pointer"><div class="li-t">'+esc(f.name)+'</div><div class="li-s">'+esc(f.category)+' · '+(late?'<span style="color:var(--red)">was due '+fmtD(d)+'</span>':'on the '+ordinal(f.day))+(f.end===ym?' · last month':'')+'</div></div><b class="amt">'+money0(fixedAmt(f,ym))+'</b>'+st+'</div>'; }).join("");
+    return '<div class="li fx-row"><div class="li-main" data-act="editFixed" data-id="'+f.id+'" style="cursor:pointer"><div class="li-t">'+esc(f.name)+'</div><div class="li-s">'+esc(f.category)+' · '+(late?'<span style="color:var(--red)">was due '+fmtD(d)+'</span>':'on the '+ordinal(f.day))+(f.end===ym?' · last month':'')+'</div></div><b class="amt">'+money0(fixedAmt(f,ym))+'</b><button class="btn sm cost-edit" data-act="editFixed" data-id="'+f.id+'" aria-label="Edit '+esc(f.name)+'">✎<span class="bt-sec">Edit</span></button>'+st+'</div>'; }).join("");
   var cats={}; vx.forEach(function(e){ cats[e.category]=(cats[e.category]||0)+(+e.amount); });
   var catKeys=Object.keys(cats).sort(function(a,b){ return cats[b]-cats[a]; });
-  var vRows=vx.map(function(e){ var c=e.clientId?client(e.clientId):null; return '<div class="li" data-act="editExpense" data-id="'+e.id+'" style="cursor:pointer"><div class="li-main"><div class="li-t">'+esc(e.desc)+'</div><div class="li-s">'+fmtD(e.date)+' · '+esc(e.category)+(ws==="m"?' · '+(c?esc(c.name):'Shared'):'')+'</div></div><b class="amt">'+money0(e.amount)+'</b></div>'; }).join("");
+  var vRows=vx.map(function(e){ var c=e.clientId?client(e.clientId):null; return '<div class="li" data-act="editExpense" data-id="'+e.id+'" style="cursor:pointer"><div class="li-main"><div class="li-t">'+esc(e.desc)+'</div><div class="li-s">'+fmtD(e.date)+' · '+esc(e.category)+(ws==="m"?' · '+(c?esc(c.name):'Shared'):'')+'</div></div><b class="amt">'+money0(e.amount)+'</b><button class="btn sm cost-edit" data-act="editExpense" data-id="'+e.id+'" aria-label="Edit '+esc(e.desc)+'">✎<span class="bt-sec">Edit</span></button></div>'; }).join("");
   html+='<div class="cost-grid">'+
     '<section class="card"><div class="card-h"><div><h2>Fixed costs</h2><div class="small muted">Same amount every month. Add once, counted automatically.</div></div><b>'+money0(fT)+'</b></div><div class="list">'+(fRows||'<div class="empty">No fixed costs yet. Add rent, salaries and subscriptions once.</div>')+'</div></section>'+
     '<section class="card"><div class="card-h"><div><h2>Variable costs</h2><div class="small muted">One-time costs that change with the work.</div></div><b>'+money0(vT)+'</b></div>'+
