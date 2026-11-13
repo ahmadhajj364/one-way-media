@@ -374,7 +374,7 @@ select.ctl,input.ctl{height:38px;border:1px solid var(--line-2);border-radius:8p
 .vchart .vb:hover path{fill:var(--green-hi)}
 .vchart .vbase{stroke:var(--line-2);stroke-width:1}
 .vaxis{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
-.vtip{position:absolute;transform:translate(-50%,-100%);background:var(--text);color:#fff;font-size:12.5px;padding:6px 9px;border-radius:7px;pointer-events:none;z-index:300;white-space:nowrap}
+.vpick{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:600;white-space:nowrap}.vpick input{height:36px;border:1px solid var(--line);border-radius:9px;padding:0 10px;font:inherit;font-weight:500;color:var(--text);background:var(--surface)}.vtip{position:absolute;transform:translate(-50%,-100%);background:var(--text);color:#fff;font-size:12.5px;padding:6px 9px;border-radius:7px;pointer-events:none;z-index:300;white-space:nowrap}
 .vsrc{display:grid;gap:5px;min-width:160px}
 .vbar{display:block;height:6px;border-radius:99px;background:var(--gray-soft);overflow:hidden;max-width:260px}
 .vbar i{display:block;height:100%;background:var(--brand);border-radius:99px}
@@ -4128,20 +4128,23 @@ function visLiveDraw(){ var el=document.getElementById("visLive"); if(el) el.inn
 function visRender(){ if(ui.view!=="w-visits") return; var y=window.scrollY, f=document.activeElement&&document.activeElement.id; render(); window.scrollTo(0,y); if(f){ var n=document.getElementById(f); if(n) n.focus(); } }
 A.visDays=function(el){ VIS.days=+el.dataset.v; render(); };
 A.visRefresh=function(){ visLoad(true); visCalLoad(true); toast("Refreshing…"); };
+function visGoDay(d){ if(!d || d>TODAY) return; VIS.day=d; if(d.slice(0,7)!==VIS.calYM){ VIS.calYM=d.slice(0,7); visCalLoad(); } render(); setTimeout(function(){ var p=document.getElementById("visDayPanel"); if(p) p.scrollIntoView({behavior:"smooth",block:"start"}); },60); }
+document.addEventListener("change",function(ev){ if(ev.target && ev.target.id==="visPick") visGoDay(ev.target.value); });
 A.visCal=function(el){ VIS.calYM=addMonths(VIS.calYM,+el.dataset.n); VIS.day=""; visCalLoad(); render(); };
 A.visDay=function(el){ var d=el.dataset.date; if(!d) return; VIS.day=VIS.day===d?"":d; if(d.slice(0,7)!==VIS.calYM){ VIS.calYM=d.slice(0,7); visCalLoad(); } render(); var p=document.getElementById("visDayPanel"); if(p) p.scrollIntoView({behavior:"smooth",block:"start"}); };
 function pct(a,b){ return b?Math.round(a/b*1000)/10+"%":"–"; }
 function uniqV(list){ var o={}; list.forEach(function(e){ o[e.visitor||e.session]=1; }); return Object.keys(o).length; }
 function barsSVG(labels,vals,tips,keys,H,act){
-  var n=vals.length, max=Math.max(1,Math.max.apply(null,vals)), W=Math.max(320,n*14), gap=2, bw=(W-gap*(n-1))/n;
+  var n=vals.length, max=Math.max(1,Math.max.apply(null,vals)), W=1000, slot=W/n, bw=Math.max(2,Math.min(slot-3,n>40?slot-2:34));
   return '<svg viewBox="0 0 '+W+' '+(H+1)+'" preserveAspectRatio="none" role="img"><line x1="0" x2="'+W+'" y1="'+H+'" y2="'+H+'" class="vbase"/>'+vals.map(function(v,ix){
-    var bh=v?Math.max(3,v/max*(H-6)):0, x=ix*(bw+gap), y=H-bh, r=Math.min(4,bw/2,bh);
+    var bh=v?Math.max(3,v/max*(H-6)):0, x=ix*slot+(slot-bw)/2, y=H-bh, r=Math.min(4,bw/2,bh);
     var path=bh?'M'+x+','+H+'V'+(y+r)+'Q'+x+','+y+' '+(x+r)+','+y+'H'+(x+bw-r)+'Q'+(x+bw)+','+y+' '+(x+bw)+','+(y+r)+'V'+H+'Z':'';
-    return '<g class="vb'+(keys&&keys[ix]===VIS.day?' sel':'')+'" data-tip="'+esc(tips[ix])+'"'+(act&&keys?' data-act="'+act+'" data-date="'+keys[ix]+'"':'')+'><rect x="'+x+'" y="0" width="'+(bw+gap)+'" height="'+H+'" fill="transparent"/>'+(path?'<path d="'+path+'"/>':'')+'</g>'; }).join("")+'</svg>';
+    return '<g class="vb'+(keys&&keys[ix]===VIS.day?' sel':'')+'" data-tip="'+esc(tips[ix])+'"'+(act&&keys?' data-act="'+act+'" data-date="'+keys[ix]+'"':'')+'><rect x="'+(ix*slot)+'" y="0" width="'+slot+'" height="'+H+'" fill="transparent"/>'+(path?'<path d="'+path+'"/>':'')+'</g>'; }).join("")+'</svg>';
 }
 R_["w-visits"]=function(){
   var seg='<div class="seg">'+[[7,"7 days"],[30,"30 days"],[90,"90 days"]].map(function(x){ return '<button data-act="visDays" data-v="'+x[0]+'" aria-pressed="'+(VIS.days===x[0])+'">'+x[1]+'</button>'; }).join("")+'</div>';
-  var h=head("Visitors","Who visits the website, where they come from, and how many ask for a quote.",seg+'<button class="btn" data-act="visRefresh">Refresh</button>');
+  var pick='<label class="vpick"><span>Check a date</span><input type="date" id="visPick" max="'+TODAY+'" value="'+(VIS.day||"")+'" aria-label="Check visitors on a date"></label>';
+  var h=head("Visitors","Who visits the website, where they come from, and how many ask for a quote.",pick+seg+'<button class="btn" data-act="visRefresh">Refresh</button>');
   if(!CLOUD.on || !CLOUD.user) return h+'<section class="card"><div class="card-b muted">Visitor stats appear here on the live dashboard once you are signed in.</div></section>';
   if(VIS.err==="setup") return h+'<section class="card"><div class="card-b"><b>One more database step is needed.</b><p class="muted" style="margin:6px 0 0">Run the visitors update in Supabase (SQL Editor), then press Refresh.</p></div></section>';
   if(!VIS.liveOn){ VIS.liveOn=true; }
@@ -4204,12 +4207,12 @@ function visDayHTML(d){
       return '<div class="li"><div class="li-main"><div class="li-t">'+pad(t.getHours())+':'+pad(t.getMinutes())+' · from '+(VSRC_SHORT[e.source]||"Direct")+(e.ref_host&&e.source==="other"?' ('+esc(e.ref_host)+')':'')+'</div><div class="li-s">'+(e.device==="mobile"?"Phone":"Computer")+' · arrived on '+visPage(e.page)+'</div></div>'+(asked?'<span class="pill green">Asked for a quote</span>':'')+'</div>'; }).join("")+'</div>';
   return html+'</div></section>';
 }
-/* hover label for chart bars */
-document.addEventListener("mouseover",function(e){ var g=e.target.closest&&e.target.closest("[data-tip]"), tip=document.getElementById("vtip");
+/* hover label for chart bars: follows the pointer */
+document.addEventListener("mousemove",function(e){ var g=e.target.closest&&e.target.closest("[data-tip]"), tip=document.getElementById("vtip");
   if(!g){ if(tip) tip.hidden=true; return; }
   if(!tip){ tip=document.createElement("div"); tip.id="vtip"; tip.className="vtip"; document.body.appendChild(tip); }
-  tip.textContent=g.getAttribute("data-tip"); tip.hidden=false; var r=g.getBoundingClientRect(); tip.style.left=Math.round(r.left+r.width/2)+"px"; tip.style.top=Math.round(r.top+window.scrollY-8)+"px"; });
-
+  tip.textContent=g.getAttribute("data-tip"); tip.hidden=false; var hw=tip.offsetWidth/2, cx=Math.min(Math.max(e.clientX,hw+8),window.innerWidth-hw-8); tip.style.left=(cx+window.scrollX)+"px"; tip.style.top=(e.pageY-14)+"px"; });
+document.addEventListener("scroll",function(){ var t=document.getElementById("vtip"); if(t) t.hidden=true; },true);
 /* ---------- quote requests from the website become new leads ---------- */
 function cloudImportRequests(){
   if(!CLOUD.on || !CLOUD.user || !CLOUD.ready) return;
