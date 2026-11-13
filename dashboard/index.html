@@ -195,6 +195,9 @@ select.ctl,input.ctl{height:38px;border:1px solid var(--line-2);border-radius:8p
 .items-h{display:grid;grid-template-columns:minmax(0,1fr) 62px 96px 108px 88px 32px;gap:8px;font-size:12px;color:var(--muted);font-weight:600}
 .items-h span:nth-child(5){text-align:end}
 .fee-pair{display:grid;grid-template-columns:minmax(0,1fr) 118px;gap:8px}
+.plan-wrap[hidden]{display:none!important}
+.svc-add{display:flex;gap:8px;margin-top:10px;max-width:420px}
+.svc-add input{flex:1;min-width:0}
 .cost-edit{gap:5px;flex:none}
 .item .it-b{width:100%;border:1px solid var(--line-2);border-radius:8px;background:var(--surface);padding:0 8px;height:38px;font:inherit;font-size:14px;color:var(--text)}
 .item .it-b:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px var(--green-soft)}
@@ -2835,6 +2838,12 @@ function quoteLateInner(removed){ var f=+S.settings.lateFee||0;
     '<button type="button" class="btn sm'+(removed?'':' danger-soft')+'" data-act="toggleFeeField" data-k="quote">'+(removed?ico("plus")+'Add it back':ico("x")+'Remove from this quote')+'</button>'; }
 function quoteLateBox(q){ if(!+S.settings.lateFee) return ''; return '<input type="hidden" id="d-nolate" value="'+(q.noLateClause?1:0)+'"><div class="late-box'+(q.noLateClause?' off':'')+'" id="lateBox">'+quoteLateInner(!!q.noLateClause)+'</div>'; }
 var SERVICES=["Videography","Video editing","Content creation","Paid ads","Studio"];
+function svcChip(v,on){ return '<label class="check chip" style="padding:6px 10px"><input type="checkbox" class="c-svc" value="'+esc(v)+'"'+(on?" checked":"")+'>'+esc(v)+'</label>'; }
+function svcChipsHTML(sel){ sel=sel||[]; var all=SERVICES.slice();
+  S.clients.forEach(function(x){ (x.services||[]).forEach(function(v){ if(v && all.indexOf(v)<0) all.push(v); }); }); sel.forEach(function(v){ if(v && all.indexOf(v)<0) all.push(v); });
+  return '<div class="f"><span class="flabel">Services</span><div class="chips" id="c-svc-chips">'+all.map(function(v){ return svcChip(v,sel.indexOf(v)>-1); }).join("")+'</div>'+
+    '<div class="svc-add"><input id="c-svc-new" maxlength="60" placeholder="Custom service, e.g. Logo design" aria-label="Custom service"><button type="button" class="btn sm" data-act="addSvcChip">'+ico("plus")+'Add</button></div></div>'; }
+function planToggle(){ var b=document.getElementById("c-bill"), pw=document.querySelector("#modalRoot .plan-wrap"); if(b&&pw) pw.hidden=b.value==="o"; }
 function clientModal(c){
   var isNew=!c; c=c||{id:"",name:"",contact:"",phone:"",email:"",instagram:"",address:"",industry:"",fee:0,start:TODAY,services:[],notes:"",links:"",color:COLORS[S.clients.length%COLORS.length],status:"active"};
   openModal(isNew?"New client":"Edit "+esc(c.name),
@@ -2844,8 +2853,8 @@ function clientModal(c){
     '<div class="frow"><div class="f"><label for="c-ig">Instagram</label><input id="c-ig" value="'+esc(c.instagram)+'"></div><div class="f"><label for="c-addr">Address</label><input id="c-addr" value="'+esc(c.address)+'"></div></div>'+
     '<div class="frow three"><div class="f"><label for="c-fee">Fee ($)</label><div class="fee-pair"><input id="c-fee" type="number" min="0" value="'+(c.fee||0)+'"><select id="c-bill" aria-label="Billing"><option value="m"'+(c.once?'':' selected')+'>per month</option><option value="o"'+(c.once?' selected':'')+'>one-time</option></select></div></div><div class="f"><label for="c-start">Contract start</label><input id="c-start" type="date" value="'+c.start+'"></div><div class="f"><label for="c-status">Status</label><select id="c-status"><option value="active"'+(c.status==="active"?" selected":"")+'>Active</option><option value="paused"'+(c.status==="paused"?" selected":"")+'>Paused</option></select></div></div>'+
     '<div class="frow"><div class="f"><label for="c-ind">Industry</label><input id="c-ind" value="'+esc(c.industry)+'"></div><div class="f"><span class="flabel">Calendar color</span><div class="chips">'+COLORS.map(function(col){ return '<label class="check" style="gap:0"><input type="radio" name="c-color" value="'+col+'"'+(col===c.color?" checked":"")+' style="position:absolute;opacity:0"><span style="width:24px;height:24px;border-radius:50%;background:'+col+';display:inline-block;box-shadow:'+(col===c.color?"0 0 0 2px var(--surface),0 0 0 4px "+col:"none")+'" data-act="pickColor"></span></label>'; }).join("")+'</div></div></div>'+
-    '<div class="section-t">Monthly plan</div><div class="frow" style="grid-template-columns:repeat(4,minmax(0,1fr))">'+FMTS.map(function(f){ return '<div class="f"><label for="pl-'+f[0]+'">'+f[2]+'</label><input id="pl-'+f[0]+'" type="number" min="0" step="1" value="'+(+planFor(c)[f[0]]||0)+'"></div>'; }).join("")+'</div><p class="hint" style="margin:-6px 0 0">How many of each you deliver every month. The client page tracks it against the calendar.</p>'+
-    '<div class="f"><span class="flabel">Services</span><div class="chips">'+SERVICES.map(function(s){ return '<label class="check chip" style="padding:6px 10px"><input type="checkbox" class="c-svc" value="'+s+'"'+(c.services.indexOf(s)>-1?" checked":"")+'>'+s+'</label>'; }).join("")+'</div></div>'+
+    '<div class="plan-wrap"'+(c.once?' hidden':'')+'><div class="section-t">Monthly plan</div><div class="frow" style="grid-template-columns:repeat(4,minmax(0,1fr))">'+FMTS.map(function(f){ return '<div class="f"><label for="pl-'+f[0]+'">'+f[2]+'</label><input id="pl-'+f[0]+'" type="number" min="0" step="1" value="'+(+planFor(c)[f[0]]||0)+'"></div>'; }).join("")+'</div><p class="hint" style="margin:-6px 0 0">How many of each you deliver every month. The client page tracks it against the calendar.</p></div>'+
+    svcChipsHTML(c.services)+
     '<div class="frow"><div class="f"><label for="c-notes">Notes</label><textarea id="c-notes">'+esc(c.notes)+'</textarea></div><div class="f"><label for="c-links">Brand files and links</label><textarea id="c-links" placeholder="Drive folder, logo files, brand guide">'+esc(c.links)+'</textarea></div></div>'+
     '<p class="form-err" id="formErr" hidden></p></form>',
     (isNew?'':'<button class="btn danger" data-act="delClient" data-id="'+c.id+'">Delete</button>')+'<span class="spacer"></span><button class="btn" data-act="closeModal">Cancel</button><button class="btn primary" data-act="submit">Save</button>', true);
@@ -3025,7 +3034,7 @@ FORMS.onboard=function(form){
   var l=S.leads.find(function(x){ return x.id===form.dataset.lead; }), q=S.quotes.find(function(x){ return x.id===form.dataset.quote; });
   var c={id:uid(),name:fv("c-name"),contact:fv("c-contact"),phone:fv("c-phone"),email:fv("c-email"),instagram:fv("c-ig"),address:fv("c-addr"),industry:fv("c-ind"),fee:+fv("c-fee")||0,once:fv("c-bill")==="o",start:fv("c-start")||TODAY,notes:fv("c-notes"),links:"",color:COLORS[S.clients.length%COLORS.length],status:"active"};
   c.services=Array.prototype.map.call(document.querySelectorAll(".c-svc:checked"),function(x){ return x.value; });
-  c.plan={}; FMTS.forEach(function(f){ c.plan[f[0]]=Math.max(0,parseInt(fv("pl-"+f[0]),10)||0); });
+  c.plan={}; FMTS.forEach(function(f){ c.plan[f[0]]=c.once?0:Math.max(0,parseInt(fv("pl-"+f[0]),10)||0); });
   S.clients.push(c);
   if(l){ l.clientId=c.id; if(l.stage!=="won"){ l.stage="won"; l.closedAt=TODAY; } }
   if(q){ q.clientId=c.id; q.status="accepted"; }
@@ -3043,7 +3052,7 @@ FORMS.client=function(form){
   c.name=fv("c-name"); c.contact=fv("c-contact"); c.phone=fv("c-phone"); c.email=fv("c-email"); c.instagram=fv("c-ig"); c.address=fv("c-addr"); c.fee=+fv("c-fee")||0; c.once=fv("c-bill")==="o"; c.start=fv("c-start")||TODAY; c.status=fv("c-status"); c.industry=fv("c-ind"); c.notes=fv("c-notes"); c.links=fv("c-links");
   var col=document.querySelector('input[name="c-color"]:checked'); c.color=col?col.value:(c.color||COLORS[0]);
   c.services=Array.prototype.map.call(document.querySelectorAll(".c-svc:checked"),function(x){ return x.value; });
-  c.plan={}; FMTS.forEach(function(f){ c.plan[f[0]]=Math.max(0,parseInt(fv("pl-"+f[0]),10)||0); });
+  c.plan={}; FMTS.forEach(function(f){ c.plan[f[0]]=c.once?0:Math.max(0,parseInt(fv("pl-"+f[0]),10)||0); });
   if(!id){ S.clients.push(c); ui.clientId=c.id; ui.view="m-client"; }
   done(id?"Client updated":"Client added");
 };
@@ -3159,9 +3168,9 @@ function onboardModal(l,q){
     '<div class="f"><label for="c-addr">Address</label><input id="c-addr" value="'+esc(c.address)+'"></div>'+
     '<div class="section-t">What they signed up for</div>'+
     (q?'<div class="ob-lines">'+items.map(function(i){ return '<div class="'+(i.budget?'bud':'')+'"><span>'+esc(i.d)+(+i.q>1?' × '+i.q:'')+'</span><b>'+money((+i.q||0)*(+i.p||0))+'</b></div>'; }).join("")+'</div>':'')+
-    '<div class="f"><span class="flabel">Services</span><div class="chips">'+SERVICES.map(function(sv){ return '<label class="check chip" style="padding:6px 10px"><input type="checkbox" class="c-svc" value="'+sv+'"'+(c.services.indexOf(sv)>-1?" checked":"")+'>'+sv+'</label>'; }).join("")+'</div></div>'+
+    svcChipsHTML(c.services)+
     '<div class="frow"><div class="f"><label for="c-fee">Fee ($)</label><div class="fee-pair"><input id="c-fee" type="number" min="0" value="'+(c.fee||0)+'"><select id="c-bill" aria-label="Billing"><option value="m"'+(c.once?'':' selected')+'>per month</option><option value="o"'+(c.once?' selected':'')+'>one-time</option></select></div><span class="hint">'+(q?'From the quote\'s fees'+(buds.length?', without the ad budget':'')+'. Change it if it\'s different.':'Monthly retainer, or a one-time project fee.')+'</span></div><div class="f"><label for="c-start">Start date</label><input id="c-start" type="date" value="'+TODAY+'"></div></div>'+
-    '<div class="f"><span class="flabel">Monthly plan (what they get each month)</span><div class="frow" style="grid-template-columns:repeat(4,minmax(0,1fr))">'+FMTS.map(function(f){ return '<div class="f"><label for="pl-'+f[0]+'">'+f[2]+'</label><input id="pl-'+f[0]+'" type="number" min="0" step="1" value="'+(plan[f[0]]||0)+'"></div>'; }).join("")+'</div><span class="hint">This is what the dashboard tracks every month (posted vs planned). You can change it later.</span></div>'+
+    '<div class="f plan-wrap"'+(c.once?' hidden':'')+'><span class="flabel">Monthly plan (what they get each month)</span><div class="frow" style="grid-template-columns:repeat(4,minmax(0,1fr))">'+FMTS.map(function(f){ return '<div class="f"><label for="pl-'+f[0]+'">'+f[2]+'</label><input id="pl-'+f[0]+'" type="number" min="0" step="1" value="'+(plan[f[0]]||0)+'"></div>'; }).join("")+'</div><span class="hint">This is what the dashboard tracks every month (scheduled vs planned). You can change it later.</span></div>'+
     (buds.length?'<div class="section-t">Ads</div>'+buds.map(function(b,i){ var pl=/google/i.test(b.d)?"Google":"Meta"; return '<label class="ob-opt"><input type="checkbox" class="ob-camp" data-i="'+i+'" data-plat="'+pl+'" data-budget="'+((+b.q||0)*(+b.p||0))+'" checked><span><b>Start a '+pl+' campaign</b><span>'+money((+b.q||0)*(+b.p||0))+'/month ad budget · shows under Ads for this client</span></span></label>'; }).join(""):'')+
     (q?'<div class="section-t">First invoice</div><label class="ob-opt"><input type="checkbox" id="ob-inv" checked><span><b>Create the first invoice now</b><span>Same lines as '+esc(q.number)+' · '+money(itemsTotal(q).total)+' · due in '+(+S.settings.invDueDays||0)+' days</span></span></label>':'')+
     '<div class="f"><label for="c-notes">Notes</label><textarea id="c-notes">'+esc(c.notes)+'</textarea></div>'+
@@ -3507,7 +3516,7 @@ document.addEventListener("dragend",function(){ DRAGID=null; document.querySelec
 document.addEventListener("dragover",function(ev){ if(!DRAGID) return; var c=ev.target.closest&&ev.target.closest("[data-drop]"); if(!c) return; ev.preventDefault(); document.querySelectorAll(".drop-on").forEach(function(n){ if(n!==c) n.classList.remove("drop-on"); }); c.classList.add("drop-on"); });
 document.addEventListener("drop",function(ev){ if(!DRAGID) return; var c=ev.target.closest&&ev.target.closest("[data-drop]"); if(!c) return; ev.preventDefault(); var e=evById(DRAGID); DRAGID=null; if(!e||e.date===c.dataset.drop) { render(); return; }
   snapEv(); e.date=c.dataset.drop; ui.selDay=e.date; save(); render(); undoToast((e.type==="shoot"?"Shoot":"Post")+" moved to "+fmtDayS(e.date)); });
-document.addEventListener("keydown",function(ev){ if((ev.key==="Enter"||ev.key===" ") && ev.target.matches && ev.target.matches('.cell[role="button"]')){ ev.preventDefault(); A.selDay(ev.target); } });
+document.addEventListener("keydown",function(ev){ if(ev.key==="Enter" && ev.target.id==="c-svc-new"){ ev.preventDefault(); A.addSvcChip(); return; } if((ev.key==="Enter"||ev.key===" ") && ev.target.matches && ev.target.matches('.cell[role="button"]')){ ev.preventDefault(); A.selDay(ev.target); } });
 
 /* ---- bulk planner: many posts and shoots in one go ---- */
 var BP=null;
@@ -3712,6 +3721,11 @@ A.editCampaign=function(el){ campaignModal(S.campaigns.find(function(x){ return 
 A.delCampaign=function(el){ S.campaigns=S.campaigns.filter(function(x){ return x.id!==el.dataset.id; }); done("Campaign deleted"); };
 A.newExpense=function(el){ var ws=(el&&el.dataset&&el.dataset.ws)||(ui.ws==="s"?"s":"m"); if(el&&el.dataset&&el.dataset.cat==="Studio") ws="s"; expenseModal(null,ws); };
 A.newFixed=function(el){ fixedModal(null,(el&&el.dataset&&el.dataset.ws)||"m"); };
+A.addSvcChip=function(){ var inp=document.getElementById("c-svc-new"), box=document.getElementById("c-svc-chips"); if(!inp||!box) return; var v=inp.value.trim().replace(/\s+/g," ");
+  if(!v){ toast("Type the service name first."); inp.focus(); return; }
+  var ex=Array.prototype.find.call(box.querySelectorAll(".c-svc"),function(x){ return x.value.toLowerCase()===v.toLowerCase(); });
+  if(ex) ex.checked=true; else box.insertAdjacentHTML("beforeend",svcChip(v,true));
+  inp.value=""; inp.focus(); };
 A.editFixed=function(el){ fixedModal(S.fixed.find(function(x){ return x.id===el.dataset.id; })); };
 A.costType=function(el){ var pre={desc:fv(el.dataset.v==="fix"?"x-desc":"fx-name"),amount:fv(el.dataset.v==="fix"?"x-amt":"fx-amt")}; if(el.dataset.v==="fix") fixedModal(null,el.dataset.ws,pre); else expenseModal(null,el.dataset.ws,pre); };
 A.pickCat=function(el){ document.getElementById("x-cat").value=el.dataset.v; el.parentNode.querySelectorAll(".cp").forEach(function(b){ b.classList.toggle("on",b===el); }); };
@@ -3773,7 +3787,7 @@ document.addEventListener("click",function(ev){
 document.addEventListener("keydown",function(ev){
   if(ev.key==="Escape") closeModal();
   if((ev.key==="Enter"||ev.key===" ") && ev.target.matches('.lead[role="button"]')){ ev.preventDefault(); A.openLead(ev.target); }
-  if(ev.key==="Enter" && ev.target.matches("#modalRoot input") && !ev.target.closest(".item") && ev.target.type!=="checkbox"){ ev.preventDefault(); A.submit(); }
+  if(ev.key==="Enter" && ev.target.matches("#modalRoot input") && !ev.target.closest(".item") && ev.target.type!=="checkbox" && ev.target.id!=="c-svc-new"){ ev.preventDefault(); A.submit(); }
 });
 document.addEventListener("change",function(ev){
   var el=ev.target;
@@ -3798,6 +3812,7 @@ document.addEventListener("change",function(ev){
   else if(el.dataset.wf){ var k=el.dataset.wf; S.website[k]= k==="startingPrice" ? (+el.value||0) : el.value.trim(); webTouch(); save(); var y=window.scrollY; render(); window.scrollTo(0,y); toast("Saved"); }
   else if(el.dataset.act==="evFiles"){ addEvFiles(el.files); el.value=""; }
   else if(el.dataset.act==="evCover"){ var cf=el.files[0]; if(cf){ var cid="m"+uid(); mediaPut(cid,cf); EV.cover=cid; renderEvCover(); } el.value=""; }
+  else if(el.id==="c-bill") planToggle();
   else if(el.id==="e-fmt"){ var fh=document.getElementById("e-fmt-hint"); if(fh) fh.textContent=FMT_HINT[el.value]||""; var cw=document.getElementById("e-cover-wrap"); if(cw) cw.hidden=el.value!=="Reel"; }
   else if(el.dataset.act==="pjCover"){ var f0=el.files[0]; if(f0) shrinkImage(f0,1200,"image/jpeg",function(url){ PJ.cover=url; var pv=document.getElementById("pj-cover-pv"); pv.src=url; pv.hidden=false; }); }
   else if(el.dataset.act==="pjGallery"){ Array.prototype.forEach.call(el.files,function(f){ shrinkImage(f,1000,"image/jpeg",function(url){ PJ.gallery.push({type:"img",src:url}); renderPjGallery(); }); }); el.value=""; }
