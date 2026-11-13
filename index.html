@@ -1533,6 +1533,10 @@ document.getElementById("copyMsg").addEventListener("click", function(){ copyTex
       return post("quote_requests",r).then(function(x){ if(!x.ok) throw 0; ev("quote"); return true; }); }
   };
   if(first) ev("visit");
+  /* still here? tells the dashboard who is on the site right now */
+  setInterval(function(){ if(!document.hidden) ev("ping"); },15000);
+  document.addEventListener("visibilitychange",function(){ if(!document.hidden) ev("ping"); });
+  window.addEventListener("hashchange",function(){ ev("ping"); });
   document.addEventListener("click",function(e){ var a=e.target.closest&&e.target.closest('a[href*="wa.me/"]'); if(a) ev("wa_click"); },true);
 })();
 (function(){
