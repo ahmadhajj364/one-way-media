@@ -715,10 +715,9 @@ footer{background:var(--navy-3);color:#fff;padding:clamp(56px,7vw,88px) 0 28px}
       </div>
       <div class="foot-news">
         <h4 data-i18n="news_title">Get the latest news and updates</h4>
-        <p data-i18n="news_p">Follow One Way Media on Instagram and Facebook.</p>
+        <p data-i18n="news_p">Follow One Way Media on Instagram.</p>
         <div class="news-links">
           <a class="soc igLink" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#ico-ig"/></svg><span>Instagram</span></a>
-          <a class="soc fbLink" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#ico-fb"/></svg><span>Facebook</span></a>
         </div>
       </div>
     </div>
@@ -736,7 +735,8 @@ var WA = "96181576289";
    CONTENT — fill these in and the matching sections appear on their own.
    Anything left empty stays hidden, so the site never shows a placeholder.
    =================================================================== */
-var CONTENT = window.__OWM_LIVE || /*OWM-CONTENT*/{"whatsapp":"96181576289","email":"","instagram":"","tiktok":"","facebook":"","maps":"","startingPrice":0,"studioOpen":false,"showreel":"","reels":[],"results":[],"testimonials":[],"logos":[],"studioPhotos":[],"projects":[],"texts":{"ar":{"title":"","sub":""}},"copy":{},"layout":{"order":{"work":["work-head","work-logos","work-projects","work-showreel","work-reels","work-results","work-quotes","work-final"]},"hidden":["home-reels","work-reels","work-showreel"]},"heroFrame":false}/*OWM-CONTENT-END*/;
+var CONTENT = window.__OWM_LIVE || /*OWM-CONTENT*/{"whatsapp":"96181576289","email":"","instagram":"onewaymedia.lb","tiktok":"","facebook":"","maps":"","startingPrice":0,"studioOpen":false,"showreel":"","reels":[],"results":[],"testimonials":[],"logos":[],"studioPhotos":[],"projects":[],"texts":{"ar":{"title":"","sub":""}},"copy":{},"layout":{"order":{"work":["work-head","work-logos","work-projects","work-showreel","work-reels","work-results","work-quotes","work-final"]},"hidden":["home-reels","work-reels","work-showreel"]},"heroFrame":false}/*OWM-CONTENT-END*/;
+if(!CONTENT.instagram) CONTENT.instagram="onewaymedia.lb";
 /* Format of each list:
    logos: [{name:"Client name", src:"logo.png", cat:"Women's clothing", ig:"@handle", web:"https://…", cover:"photo.jpg"}]
    results: [{value:"+180%", label:"Instagram reach in 3 months", client:"Client name"}]
@@ -993,7 +993,7 @@ var I18N = {
   "foot_loc":"Location",
   "maps_open":"Open in Google Maps",
   "news_title":"Get the latest news and updates",
-  "news_p":"Follow One Way Media on Instagram and Facebook."
+  "news_p":"Follow One Way Media on Instagram."
  },
  "ar":{
   "pf_eyebrow":"أعمال مختارة",
@@ -1236,7 +1236,7 @@ var I18N = {
   "foot_loc":"الموقع",
   "maps_open":"افتح في خرائط غوغل",
   "news_title":"تابع آخر أخبارنا وتحديثاتنا",
-  "news_p":"تابع One Way Media على إنستغرام وفيسبوك."
+  "news_p":"تابع One Way Media على إنستغرام."
  }
 };
 
