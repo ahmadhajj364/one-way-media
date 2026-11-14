@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="owm-build" content="1794603592">
-<script>(function(){var B="1794603592",DASH=true;function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v);}catch(e){return null;}}function bar(){if(document.getElementById("owm-upd"))return;var d=document.createElement("div");d.id="owm-upd";d.setAttribute("style","position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;background:#0B2545;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font:600 14px/1.3 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)");d.innerHTML="<span>A new version is ready</span>";var b=document.createElement("button");b.textContent="Refresh";b.setAttribute("style","background:#1F9D55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer");b.onclick=function(){location.reload();};d.appendChild(b);document.body.appendChild(d);}function chk(first){try{fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():"";}).then(function(t){var m=/name="owm-build" content="(\d+)"/.exec(t);if(!m||+m[1]<=+B)return;if(first){var last=+ss("owm-upd")||0;if(Date.now()-last>60000){ss("owm-upd",String(Date.now()));location.reload();return;}}if(DASH)bar();},function(){});}catch(e){}}setTimeout(function(){chk(true);},1200);if(DASH){setInterval(function(){if(!document.hidden)chk(false);},60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk(false);});}})();</script>
+<meta name="owm-build" content="1794661376">
+<script>(function(){var B="1794661376",DASH=true;function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v);}catch(e){return null;}}function bar(){if(document.getElementById("owm-upd"))return;var d=document.createElement("div");d.id="owm-upd";d.setAttribute("style","position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;background:#0B2545;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font:600 14px/1.3 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)");d.innerHTML="<span>A new version is ready</span>";var b=document.createElement("button");b.textContent="Refresh";b.setAttribute("style","background:#1F9D55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer");b.onclick=function(){location.reload();};d.appendChild(b);document.body.appendChild(d);}function chk(first){try{fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():"";}).then(function(t){var m=/name="owm-build" content="(\d+)"/.exec(t);if(!m||+m[1]<=+B)return;if(first){var last=+ss("owm-upd")||0;if(Date.now()-last>60000){ss("owm-upd",String(Date.now()));location.reload();return;}}if(DASH)bar();},function(){});}catch(e){}}setTimeout(function(){chk(true);},1200);if(DASH){setInterval(function(){if(!document.hidden)chk(false);},60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk(false);});}})();</script>
 
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1372,6 +1372,12 @@ function numv(x){ var n=parseFloat(String(x==null?"":x).replace(/,/g,".").replac
 function invClient(i){ if(i.clientId){ var f=S.clients.find(function(c){ return c.id===i.clientId; }); if(f) return f; } if(i.toName) return {id:"",name:i.toName,contact:i.toName,color:"#98A2B3",phone:i.toPhone||"",email:i.toEmail||"",address:i.toAddress||"",services:[],fee:0,start:TODAY,other:true}; return client(i.clientId); }
 function client(id){ return S.clients.find(function(c){ return c.id===id; }) || {id:"",name:"(deleted client)",color:"#98A2B3",phone:"",email:"",address:"",contact:"",services:[],fee:0,start:TODAY}; }
 function itemsTotal(doc){ var sub=sum(doc.items,function(i){ return (+i.q||0)*(+i.p||0); }); var tax=sub*(+doc.tax||0)/100; return {sub:sub,tax:tax,total:sub+tax}; }
+/* two-part invoices: the split sentence always sits on top of the payment terms; anything written by hand stays under it */
+function termsFor(terms,split){ var rest=String(terms||"").replace(/^\s*\d+% is paid upfront and \d+% once the work is done\.[ \t]*\n?/,"").replace(/^\s+/,"");
+  if(split){ if(rest.trim()===String(S.settings.invTerms||"").trim()) rest=""; return split+"% is paid upfront and "+(100-split)+"% once the work is done."+(rest?"\n"+rest:""); }
+  return rest||S.settings.invTerms||""; }
+function termsLive(){ var ta=document.getElementById("d-terms"); if(!ta||!document.getElementById("d-split")) return; var on=fv("d-split")==="1", p=Math.round(+fv("d-splitpct")||0); if(on&&!(p>=1&&p<=99)) return; ta.value=termsFor(ta.value,on?p:0); }
+document.addEventListener("input",function(ev){ if(ev.target&&ev.target.id==="d-splitpct") termsLive(); });
 function splitCalcUpd(){ var box=document.getElementById("splitCalc"); if(!box || !document.getElementById("items")) return; var t=itemsTotal({items:readItems(),tax:+fv("d-tax")||0}).total, p=+fv("d-splitpct")||0;
   box.textContent = p>=1&&p<=99 ? "Upfront "+money(Math.round(t*p)/100)+" · Once done "+money(t-Math.round(t*p)/100) : "Type a % between 1 and 99.";
   var l1=document.getElementById("pay1L"), l2=document.getElementById("pay2L"); if(l1&&l2&&p>=1&&p<=99){ l1.textContent="Before we start: "+p+"% ("+money(Math.round(t*p)/100)+") received"; l2.textContent="After delivery: "+(100-p)+"% ("+money(t-Math.round(t*p)/100)+") received"; } }
@@ -1551,7 +1557,7 @@ function pdfMeta(doc,cols){
 function pdfParty(doc,x,label,name,l1,l2,person){
   font(doc,"bold",8); T(doc,GREEN); doc.text(label,x,205);
   font(doc,"bold",10); T(doc,DARK); doc.text(doc.splitTextToSize(name||"",230)[0]||"",x,222);
-  var y=236; if(person){ font(doc,"normal",9); T(doc,DARK); doc.text(doc.splitTextToSize("Attn: "+person,235)[0]||"",x,y); y+=13; }
+  var y=236; if(person){ font(doc,"normal",9); T(doc,DARK); doc.text(doc.splitTextToSize("Contact: "+person,235)[0]||"",x,y); y+=13; }
   font(doc,"normal",8.5); T(doc,GRAY); [l1,l2].filter(Boolean).forEach(function(t){ doc.text(doc.splitTextToSize(t,235)[0]||"",x,y); y+=13; });
 }
 /* generic table in the template style; cols: [{h, x, align, w}]
@@ -3028,9 +3034,7 @@ function collectDoc(kind,form){
     if(stv==="deposit" && d.split) d.depositAt=d.depositAt||TODAY; else if(stv!=="paid" || !d.split) d.depositAt="";
     if(d.split && document.getElementById("d-pay1")){ var _p1=document.getElementById("d-pay1").checked, _p2=document.getElementById("d-pay2").checked;
       d.status=_p2?"paid":"unpaid"; d.depositAt=(_p1||_p2)?(d.depositAt||TODAY):""; }
-    var AUTO=/% is paid upfront and \d+% once the work is done\.$/;
-    if(d.split && (!d.terms || d.terms===S.settings.invTerms || AUTO.test(d.terms))) d.terms=d.split+"% is paid upfront and "+(100-d.split)+"% once the work is done.";
-    else if(!d.split && AUTO.test(d.terms||"")) d.terms=S.settings.invTerms;
+    d.terms=termsFor(d.terms,d.split);
     d.waiveLate=fv("d-waive")==="1";
     if(d.status==="paid" && !wasPaid){ d.paidAt=TODAY; d.lateFeeCharged=lateFeeOn(d,TODAY); } if(d.status!=="paid"){ d.paidAt=""; d.lateFeeCharged=0; }
     if(!id){ S.invoices.push(d); bumpNumber("invoice",number); }
@@ -3834,7 +3838,7 @@ document.addEventListener("change",function(ev){
   else if(el.dataset.act==="webImg"){ var file=el.files[0]; if(!file) return; var tid=el.dataset.target, logo=el.dataset.kind==="logos" && tid!=="wi-cover";
     shrinkImage(file, logo?440:(el.dataset.kind==="reels"?720:1000), logo?"image/png":"image/jpeg", function(url){ document.getElementById(tid).value=url; var pv=document.getElementById(tid+"-pv"); pv.src=url; pv.hidden=false; }); }
   else if(el.id==="e-type"){ document.querySelectorAll("#modalRoot .post-only").forEach(function(x){ x.hidden=el.value==="shoot"; }); document.querySelectorAll("#modalRoot .shoot-only").forEach(function(x){ x.hidden=el.value!=="shoot"; }); }
-  else if(el.id==="d-split"){ var on=el.value==="1"; ["splitPctF","splitCalc","payParts"].forEach(function(x){ var n=document.getElementById(x); if(n) n.hidden=!on; }); var sf=document.getElementById("statusF"); if(sf){ sf.hidden=on; if(on){ var sv=fv("d-status"); var c1=document.getElementById("d-pay1"), c2=document.getElementById("d-pay2"); if(c1&&c2){ c1.checked=sv==="paid"||sv==="deposit"; c2.checked=sv==="paid"; } } } var o=document.querySelector('#d-status option[value="deposit"]'); if(o){ o.hidden=!on; o.disabled=!on; if(!on && o.selected) document.getElementById("d-status").value="unpaid"; } splitCalcUpd(); }
+  else if(el.id==="d-split"){ termsLive(); var on=el.value==="1"; ["splitPctF","splitCalc","payParts"].forEach(function(x){ var n=document.getElementById(x); if(n) n.hidden=!on; }); var sf=document.getElementById("statusF"); if(sf){ sf.hidden=on; if(on){ var sv=fv("d-status"); var c1=document.getElementById("d-pay1"), c2=document.getElementById("d-pay2"); if(c1&&c2){ c1.checked=sv==="paid"||sv==="deposit"; c2.checked=sv==="paid"; } } } var o=document.querySelector('#d-status option[value="deposit"]'); if(o){ o.hidden=!on; o.disabled=!on; if(!on && o.selected) document.getElementById("d-status").value="unpaid"; } splitCalcUpd(); }
   else if(el.dataset.act==="importData"){ var file=el.files[0]; if(!file) return; var r=new FileReader(); r.onload=function(){ try{ var d=JSON.parse(r.result); if(!d||d.v!==2||!d.settings) throw 0; d.noDemo1=1; S=d; save(); location.reload(); }catch(e){ toast("That file isn't a dashboard backup."); } }; r.readAsText(file); }
   else if(el.id==="d-client"){ var oth=el.value==="__other", ot=document.getElementById("otherTo"), hint=document.getElementById("billTo");
     if(ot) ot.hidden=!oth; if(hint) hint.hidden=oth;
