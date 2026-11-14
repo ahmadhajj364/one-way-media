@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="owm-build" content="1794661376">
-<script>(function(){var B="1794661376",DASH=true;function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v);}catch(e){return null;}}function bar(){if(document.getElementById("owm-upd"))return;var d=document.createElement("div");d.id="owm-upd";d.setAttribute("style","position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;background:#0B2545;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font:600 14px/1.3 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)");d.innerHTML="<span>A new version is ready</span>";var b=document.createElement("button");b.textContent="Refresh";b.setAttribute("style","background:#1F9D55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer");b.onclick=function(){location.reload();};d.appendChild(b);document.body.appendChild(d);}function chk(first){try{fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():"";}).then(function(t){var m=/name="owm-build" content="(\d+)"/.exec(t);if(!m||+m[1]<=+B)return;if(first){var last=+ss("owm-upd")||0;if(Date.now()-last>60000){ss("owm-upd",String(Date.now()));location.reload();return;}}if(DASH)bar();},function(){});}catch(e){}}setTimeout(function(){chk(true);},1200);if(DASH){setInterval(function(){if(!document.hidden)chk(false);},60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk(false);});}})();</script>
+<meta name="owm-build" content="1794699207">
+<script>(function(){var B="1794699207",DASH=true;function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v);}catch(e){return null;}}function bar(){if(document.getElementById("owm-upd"))return;var d=document.createElement("div");d.id="owm-upd";d.setAttribute("style","position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;background:#0B2545;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font:600 14px/1.3 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)");d.innerHTML="<span>A new version is ready</span>";var b=document.createElement("button");b.textContent="Refresh";b.setAttribute("style","background:#1F9D55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer");b.onclick=function(){location.reload();};d.appendChild(b);document.body.appendChild(d);}function chk(first){try{fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():"";}).then(function(t){var m=/name="owm-build" content="(\d+)"/.exec(t);if(!m||+m[1]<=+B)return;if(first){var last=+ss("owm-upd")||0;if(Date.now()-last>60000){ss("owm-upd",String(Date.now()));location.reload();return;}}if(DASH)bar();},function(){});}catch(e){}}setTimeout(function(){chk(true);},1200);if(DASH){setInterval(function(){if(!document.hidden)chk(false);},60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk(false);});}})();</script>
 
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1440,8 +1440,18 @@ function fmtOfTitle(t){ t=String(t||"").toLowerCase(); return t.indexOf("carouse
 function evFmt(e){ var f=e.type==="shoot"?"Shoot":(e.format||fmtOfTitle(e.title)); return f==="Carousel"?"Post":f; }
 function planFor(c){ return c.plan||{reels:0,posts:0,stories:0,shoots:0}; }
 function planTotal(c){ var p=planFor(c); return FMTS.reduce(function(a,f){ return a+(f[0]==="shoots"?0:(+p[f[0]]||0)); },0); }
+/* each client's month runs from their contract start day (15/11 – 14/12); clients who start on the 1st follow the calendar month */
+function cycDay(c){ var d=parseInt(String(c&&c.start||"").slice(8,10),10); return d>=1&&d<=31?d:1; }
+function dayIn(ym,d){ return ym+"-"+String(Math.min(d,daysIn(ym))).padStart(2,"0"); }
+function ymAdd(ym,n){ var y=+ym.slice(0,4), m=+ym.slice(5,7)-1+n; y+=Math.floor(m/12); m=((m%12)+12)%12; return y+"-"+String(m+1).padStart(2,"0"); }
+function cycleOf(c,ym){ var d=cycDay(c); return {from:dayIn(ym,d),to:addDays(dayIn(ymAdd(ym,1),d),-1),ym:ym}; }
+function curCycle(c){ var ym=TODAY.slice(0,7); if(TODAY<dayIn(ym,cycDay(c))) ym=ymAdd(ym,-1); return cycleOf(c,ym); }
+function cycleFor(c,ym){ return ym===YM?curCycle(c):cycleOf(c,ym); }
+function cycleText(c,ym){ var k=cycleFor(c,ym); return cycDay(c)===1?fmtM(k.ym):fmtD(k.from)+" – "+fmtD(k.to)+" "+k.to.slice(0,4); }
+function planTitle(c,ym){ var k=cycleFor(c,ym); return cycDay(c)===1?fmtM(k.ym).split(" ")[0]+" plan":"Plan "+fmtD(k.from)+" – "+fmtD(k.to); }
+function invoiceDueNow(c){ return TODAY>=dayIn(YM,cycDay(c)); }
 function planProgress(c,ym){
-  var p=planFor(c), evs=S.events.filter(function(e){ return e.clientId===c.id && e.date.slice(0,7)===ym; });
+  var k=cycleFor(c,ym), p=planFor(c), evs=S.events.filter(function(e){ return e.clientId===c.id && e.date>=k.from && e.date<=k.to; });
   return FMTS.map(function(f){ var list=evs.filter(function(e){ return evFmt(e)===f[1]; });
     return {key:f[0],one:f[1],label:f[2],planned:+p[f[0]]||0,scheduled:list.length,done:list.filter(function(e){ return e.type==="shoot"?e.done:e.date<TODAY; }).length}; })
     .filter(function(r){ return r.planned||r.scheduled; });
@@ -2367,7 +2377,7 @@ R_["m-clients"]=function(){
     var unpaid=S.invoices.filter(function(i){ return i.clientId===c.id && i.status!=="paid"; });
     return '<button class="card cl" style="--c:'+c.color+'" data-act="openClient" data-id="'+c.id+'"><div class="cl-t"><div class="cl-id"><b>'+esc(c.name)+'</b><div class="small muted">'+esc([c.contact,c.instagram].filter(Boolean).join(" · ")||"—")+'</div></div>'+pillFor(c.status)+'</div>'+
       '<div class="cl-meta"><div><div class="k">'+(c.once?'One-time fee':'Monthly fee')+'</div><b>'+money0(c.fee)+'</b></div><div><div class="k">Next shoot</div>'+(nextShoot?fmtD(nextShoot.date):"—")+'</div></div>'+
-      (function(){ var ps=planSummary(c,YM); if(!ps.planned) return '<div class="plan-mini"><div class="plan-top"><span class="k">'+fmtM(YM).split(" ")[0]+' plan</span><span>Not set</span></div><span class="pbar"></span></div>'; return '<div class="plan-mini"><div class="plan-top"><span class="k">'+fmtM(YM).split(" ")[0]+' plan</span><span>'+Math.min(ps.scheduled,ps.planned)+'/'+ps.planned+' scheduled</span></div>'+planBar(0,Math.min(ps.scheduled,ps.planned),ps.planned)+'</div>'; })()+
+      (function(){ var ps=planSummary(c,YM); if(!ps.planned) return '<div class="plan-mini"><div class="plan-top"><span class="k">'+planTitle(c,YM)+'</span><span>Not set</span></div><span class="pbar"></span></div>'; return '<div class="plan-mini"><div class="plan-top"><span class="k">'+planTitle(c,YM)+'</span><span>'+Math.min(ps.scheduled,ps.planned)+'/'+ps.planned+' scheduled</span></div>'+planBar(0,Math.min(ps.scheduled,ps.planned),ps.planned)+'</div>'; })()+
       '<div class="chips">'+(run.length?'<span class="chip" style="background:var(--green-soft);color:var(--green-text)">'+run.length+' ad'+(run.length>1?"s":"")+' running</span>':'')+(od?'<span class="chip" style="background:var(--red-soft);color:var(--red)">'+od+' overdue post'+(od>1?"s":"")+'</span>':'')+(planSummary(c,YM).missing?'<span class="chip" style="background:var(--amber-soft);color:var(--amber)">'+planSummary(c,YM).missing+' not scheduled</span>':'')+(unpaid.length?'<span class="chip" style="background:var(--amber-soft);color:var(--amber)">'+unpaid.length+' unpaid</span>':'')+(!run.length&&!od&&!unpaid.length&&!planSummary(c,YM).missing?'<span class="chip">All good</span>':'')+'</div></button>';
   }).join("")+'</div>';
   return html+adsCard;
@@ -2388,7 +2398,7 @@ R_["m-client"]=function(){
     '<div class="actions"><a class="btn" href="'+waLink(c.phone,"Hi "+first(c.contact)+", ")+'" target="_blank" rel="noopener">'+ico("wa")+'WhatsApp</a><button class="btn" data-act="editClient" data-id="'+c.id+'">Edit</button><button class="btn" data-act="newEvent" data-client="'+c.id+'">'+ico("cal")+'Schedule</button><button class="btn" data-act="calPdf" data-client="'+c.id+'">'+ico("dl")+'Posting calendar</button><button class="btn primary" data-act="newInvoice" data-client="'+c.id+'">'+ico("inv")+'Invoice</button></div></div>'+
     '<div class="grid4">'+kpi(c.once?"One-time fee":"Monthly fee",money0(c.fee),c.services.join(" · ")||"—")+kpi("Client since",fmtDY(c.start),esc(c.industry||""))+kpi("Unpaid",money0(unpaid),invs.filter(function(i){ return i.status!=="paid"; }).length+" invoice(s)",unpaid>0&&invs.some(function(i){ return invStatus(i)==="overdue"; }))+kpi("Ads running",String(camps.filter(function(k){ return k.status==="Running"; }).length),money0(sum(camps.filter(function(k){ return k.status==="Running"; }),function(k){ return +k.budget; }))+"/month budget")+'</div>';
   var pp=planProgress(c,YM);
-  var planCard='<section class="card"><div class="card-h"><h2>'+fmtM(YM).split(" ")[0]+' plan</h2><button class="btn sm ghost" data-act="editClient" data-id="'+c.id+'">Edit plan</button></div>'+
+  var planCard='<section class="card"><div class="card-h"><h2>'+planTitle(c,YM)+'</h2><button class="btn sm ghost" data-act="editClient" data-id="'+c.id+'">Edit plan</button></div>'+
     (pp.length? '<div class="list">'+pp.map(function(r){ var miss=Math.max(0,r.planned-r.scheduled);
       return '<div class="li plan-row"><div class="li-main"><div class="plan-top"><b>'+r.label+'</b><span>'+(r.key==="shoots"?r.done+' of '+(r.planned||r.scheduled)+' done':r.scheduled+' of '+(r.planned||r.scheduled)+' scheduled')+'</span></div>'+planBar(r.done,r.scheduled,r.planned)+
         '<div class="li-s">'+r.scheduled+' scheduled'+(miss?' · <span style="color:var(--red)">'+miss+' not scheduled yet</span>':(r.planned&&r.scheduled>r.planned?' · '+(r.scheduled-r.planned)+' extra':''))+'</div></div>'+
@@ -2418,7 +2428,7 @@ R_["m-money"]=function(){
   var mi=S.invoices.filter(function(i){ return i.issue.slice(0,7)===YM; });
   var inv=sum(mi,invTotal), col=sum(S.invoices,function(i){ return cashIn(i,YM); });
   var outstanding=sum(unpaidInvoices(),invOwed), exp=sum(mExpenses(YM),function(e){ return +e.amount; });
-  var missing=S.clients.filter(function(cl){ return cl.status==="active" && !cl.once && +cl.fee>0 && !S.invoices.some(function(i){ return i.clientId===cl.id && i.month===YM; }); });
+  var missing=S.clients.filter(function(cl){ return cl.status==="active" && !cl.once && +cl.fee>0 && invoiceDueNow(cl) && !S.invoices.some(function(i){ return i.clientId===cl.id && i.month===YM; }); });
   var html=head("Finance","Marketing · "+fmtM(YM),'<button class="btn" data-act="newExpense" data-ws="m">'+ico("plus")+'Cost</button><button class="btn primary" data-act="newInvoice">'+ico("plus")+'Invoice</button>');
   html+='<div class="grid4">'+kpi("Invoiced",money0(inv),mi.length+" invoices this month")+kpi("Outstanding",money0(outstanding),S.invoices.filter(function(i){ return invStatus(i)==="overdue"; }).length+" overdue",S.invoices.some(function(i){ return invStatus(i)==="overdue"; }))+kpi("Costs",money0(exp),money0(fixedTotal("m",YM))+" fixed · "+money0(exp-fixedTotal("m",YM))+" variable")+kpi("Net profit",money0(inv-exp),inv?"net margin "+pct(inv-exp,inv)+"% · gross "+pct(inv-sum(varExp("m",YM),function(e){ return +e.amount; }),inv)+"%":"no invoices yet",inv-exp<0)+'</div>';
   html+=growthCard("m");
@@ -2811,11 +2821,11 @@ function quoteModal(q,prefill){
 function invoiceModal(inv,prefill){
   var isNew=!inv, s=S.settings;
   var c0=S.clients[0];
-  inv=inv||Object.assign({id:"",number:s.invPrefix+String(s.nextInv).padStart(4,"0"),clientId:c0?c0.id:"",month:YM,issue:TODAY,due:addDays(TODAY,+s.invDueDays||0),items:[{d:c0?"Social media management – "+fmtM(YM):"",q:1,p:c0?c0.fee:""}],tax:s.tax,notes:s.invNotes,terms:s.invTerms,status:"unpaid",paidAt:""},prefill||{});
+  inv=inv||Object.assign({id:"",number:s.invPrefix+String(s.nextInv).padStart(4,"0"),clientId:c0?c0.id:"",month:c0&&!c0.once?curCycle(c0).ym:YM,issue:TODAY,due:addDays(TODAY,+s.invDueDays||0),items:[{d:c0?"Social media management – "+cycleText(c0,YM):"",q:1,p:c0?c0.fee:""}],tax:s.tax,notes:s.invNotes,terms:s.invTerms,status:"unpaid",paidAt:""},prefill||{});
   var other=!(inv.clientId && S.clients.some(function(x){ return x.id===inv.clientId; })) && (!!inv.toName || !S.clients.length);
   var cl=other?{address:"",email:"",phone:""}:client(inv.clientId);
   openModal(isNew?"New invoice":"Invoice "+inv.number,
-    '<form class="form" data-form="invoice" data-id="'+inv.id+'">'+
+    '<form class="form" data-form="invoice" data-id="'+inv.id+'" data-month="'+(inv.month||"")+'">'+
     '<div class="frow three"><div class="f"><label for="d-num">Invoice no.</label><input id="d-num" value="'+esc(inv.number)+'"></div><div class="f"><label for="d-issue">Issue date</label><input id="d-issue" type="date" value="'+inv.issue+'"></div><div class="f"><label for="d-due">Due date</label><input id="d-due" type="date" value="'+inv.due+'"></div></div>'+
     '<div class="frow"><div class="f"><label for="d-client">Bill to</label><select id="d-client">'+clientOptions(other?"":inv.clientId)+'<option value="__other"'+(other?" selected":"")+'>Someone else – type the name</option></select></div><div class="f" id="statusF"'+(splitPct(inv)?" hidden":"")+'><label for="d-status">Status</label><select id="d-status"><option value="unpaid"'+(inv.status!=="paid"&&!partPaid(inv)?" selected":"")+'>Unpaid</option><option value="deposit"'+(splitPct(inv)?"":" hidden disabled")+(partPaid(inv)?" selected":"")+'>Upfront part received</option><option value="paid"'+(inv.status==="paid"?" selected":"")+'>Paid</option></select></div></div>'+
     (function(){ var sp=splitPct(inv); setTimeout(splitCalcUpd,0); return '<div class="frow"><div class="f"><label for="d-split">How the client pays</label><select id="d-split"><option value="0">All at once</option><option value="1"'+(sp?" selected":"")+'>In two parts: upfront, then the rest once done</option></select></div><div class="f" id="splitPctF"'+(sp?"":" hidden")+'><label for="d-splitpct">Upfront part (%)</label><input id="d-splitpct" type="number" min="1" max="99" step="1" inputmode="numeric" value="'+(sp||S.settings.lastSplit||50)+'"></div></div><p class="hint" id="splitCalc" style="margin:-4px 0 0"'+(sp?"":" hidden")+'></p>'+
@@ -3028,7 +3038,7 @@ function collectDoc(kind,form){
     var wasPaid=d.status==="paid";
     if(fv("d-client")==="__other"){ d.clientId=""; d.toName=fv("d-biz"); d.toPhone=fv("d-ophone"); d.toEmail=fv("d-oemail"); d.toAddress=fv("d-oaddr"); }
     else { d.clientId=fv("d-client"); delete d.toName; delete d.toPhone; delete d.toEmail; delete d.toAddress; }
-    d.toPerson=fv("d-person"); d.toBiz=fv("d-biz"); d.issue=fv("d-issue"); d.due=fv("d-due"); d.month=d.month||d.issue.slice(0,7);
+    d.toPerson=fv("d-person"); d.toBiz=fv("d-biz"); d.issue=fv("d-issue"); d.due=fv("d-due"); d.month=d.month||form.dataset.month||d.issue.slice(0,7);
     var stv=fv("d-status"); d.split=fv("d-split")==="1"?Math.round(+fv("d-splitpct")):0; if(d.split) S.settings.lastSplit=d.split;
     d.status=stv==="paid"?"paid":"unpaid";
     if(stv==="deposit" && d.split) d.depositAt=d.depositAt||TODAY; else if(stv!=="paid" || !d.split) d.depositAt="";
@@ -3708,7 +3718,7 @@ A.svcSaveRow=function(el){ var row=el.closest(".item"), name=row.querySelector("
   toast("Saved. “"+name+"” is now in your services list"+(pr?" at "+money0(pr):"")+"."); };
 A.addItem=function(){ document.getElementById("items").insertAdjacentHTML("beforeend",itemRow({d:"",q:1,p:""})); refreshTotals(); var r=document.querySelectorAll("#items .it-s"); r[r.length-1].focus(); };
 A.delItem=function(el){ el.closest(".item").remove(); refreshTotals(); };
-A.newInvoice=function(el){ var pre=null; if(el && el.dataset && el.dataset.client){ var c=client(el.dataset.client); pre={clientId:c.id,items:[c.once?{d:"Project fee",q:1,p:c.fee,once:true}:{d:"Social media management – "+fmtM(YM),q:1,p:c.fee}]}; } invoiceModal(null,pre); };
+A.newInvoice=function(el){ var pre=null; if(el && el.dataset && el.dataset.client){ var c=client(el.dataset.client); pre={clientId:c.id,month:c.once?YM:curCycle(c).ym,items:[c.once?{d:"Project fee",q:1,p:c.fee,once:true}:{d:"Social media management – "+cycleText(c,YM),q:1,p:c.fee}]}; } invoiceModal(null,pre); };
 A.openInvoice=function(el){ invoiceModal(S.invoices.find(function(x){ return x.id===el.dataset.id; })); };
 A.viewInvoice=function(el){ viewDoc("invoice",el.dataset.id); };
 A.invFilter=function(el){ ui.invFilter=el.dataset.v; render(); };
@@ -3721,9 +3731,9 @@ A.remindInv=function(el){ var i=S.invoices.find(function(x){ return x.id===el.da
   openLink(waLink(c.phone,"Hi "+first(i.toPerson||c.contact)+", a reminder that "+(sp?"the upfront payment ("+splitPct(i)+"%) for invoice ":"invoice ")+i.number+" was due on "+fmtDY(i.due)+". "+(lateFee(i)?"A "+money0(lateFee(i))+" late payment fee has been added, so the amount due is now "+money(amtDueNow(i))+".":"The amount due is "+money(amtDueNow(i))+(S.settings.lateFee&&!i.waiveLate?". Please note a "+money0(S.settings.lateFee)+" late fee applies from "+fmtDY(lateFrom(i)):"")+".")+" Thank you! – One Way Media")); toast("Opened WhatsApp"); };
 A.genMonthly=function(){
   var s=S.settings, made=0;
-  S.clients.filter(function(c){ return c.status==="active" && !c.once && +c.fee>0 && !S.invoices.some(function(i){ return i.clientId===c.id && i.month===YM; }); }).forEach(function(c){
+  S.clients.filter(function(c){ return c.status==="active" && !c.once && +c.fee>0 && invoiceDueNow(c) && !S.invoices.some(function(i){ return i.clientId===c.id && i.month===YM; }); }).forEach(function(c){
     var num=s.invPrefix+String(s.nextInv).padStart(4,"0"); s.nextInv++;
-    S.invoices.push({id:uid(),number:num,clientId:c.id,month:YM,issue:TODAY,due:addDays(TODAY,+s.invDueDays||0),items:[{d:"Social media management – "+fmtM(YM),q:1,p:c.fee}],tax:s.tax,notes:s.invNotes,terms:s.invTerms,status:"unpaid",paidAt:""}); made++;
+    S.invoices.push({id:uid(),number:num,clientId:c.id,month:YM,issue:TODAY,due:addDays(TODAY,+s.invDueDays||0),items:[{d:"Social media management – "+cycleText(c,YM),q:1,p:c.fee}],tax:s.tax,notes:s.invNotes,terms:s.invTerms,status:"unpaid",paidAt:""}); made++;
   });
   ui.moneyTab="inv"; ui.invFilter="open"; save(); render(); toast("Created "+made+" invoice"+(made===1?"":"s"));
 };
@@ -3845,7 +3855,8 @@ document.addEventListener("change",function(ev){
     var firstP=document.querySelector("#items .item .it-p"); var isNew=!document.querySelector('#modalRoot form[data-form="invoice"]').dataset.id;
     var dp=document.getElementById("d-person"), db=document.getElementById("d-biz");
     if(oth){ if(dp) dp.value=""; if(db) db.value=""; if(dp) dp.focus(); if(firstP && isNew){ firstP.value=""; refreshTotals(); } }
-    else { var c=client(el.value); if(dp) dp.value=c.contact||""; if(db) db.value=c.name||""; if(hint) hint.textContent=[c.address,c.email,c.phone].filter(Boolean).join(" · "); if(firstP && isNew){ firstP.value=c.fee; var fb=document.querySelector("#items .item .it-b"); if(fb) fb.value=c.once?"o":"m"; refreshTotals(); } } }
+    else { var c=client(el.value); if(dp) dp.value=c.contact||""; if(db) db.value=c.name||"";
+      if(isNew){ var fm=document.querySelector('#modalRoot form[data-form="invoice"]'); fm.dataset.month=c.once?YM:curCycle(c).ym; var fd=document.querySelector("#items .item .it-d"); if(fd && /^Social media management – /.test(fd.value)) fd.value="Social media management – "+cycleText(c,YM); } if(hint) hint.textContent=[c.address,c.email,c.phone].filter(Boolean).join(" · "); if(firstP && isNew){ firstP.value=c.fee; var fb=document.querySelector("#items .item .it-b"); if(fb) fb.value=c.once?"o":"m"; refreshTotals(); } } }
   else if(el.id==="b-date"||el.id==="b-start"){ updateBookingCalc(); }
   else if(el.id==="b-name"){ var ph=document.getElementById("b-phone"); if(ph && !ph.value){ var m=S.bookings.find(function(x){ return x.name.split(" – ")[0]===el.value; }); if(m) ph.value=m.phone; } }
 });
