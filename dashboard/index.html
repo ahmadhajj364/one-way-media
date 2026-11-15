@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="owm-build" content="1794699207">
-<script>(function(){var B="1794699207",DASH=true;function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v);}catch(e){return null;}}function bar(){if(document.getElementById("owm-upd"))return;var d=document.createElement("div");d.id="owm-upd";d.setAttribute("style","position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;background:#0B2545;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font:600 14px/1.3 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)");d.innerHTML="<span>A new version is ready</span>";var b=document.createElement("button");b.textContent="Refresh";b.setAttribute("style","background:#1F9D55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer");b.onclick=function(){location.reload();};d.appendChild(b);document.body.appendChild(d);}function chk(first){try{fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():"";}).then(function(t){var m=/name="owm-build" content="(\d+)"/.exec(t);if(!m||+m[1]<=+B)return;if(first){var last=+ss("owm-upd")||0;if(Date.now()-last>60000){ss("owm-upd",String(Date.now()));location.reload();return;}}if(DASH)bar();},function(){});}catch(e){}}setTimeout(function(){chk(true);},1200);if(DASH){setInterval(function(){if(!document.hidden)chk(false);},60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk(false);});}})();</script>
+<meta name="owm-build" content="1794702649">
+<script>(function(){var B="1794702649",DASH=true;function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v);}catch(e){return null;}}function bar(){if(document.getElementById("owm-upd"))return;var d=document.createElement("div");d.id="owm-upd";d.setAttribute("style","position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;background:#0B2545;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font:600 14px/1.3 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)");d.innerHTML="<span>A new version is ready</span>";var b=document.createElement("button");b.textContent="Refresh";b.setAttribute("style","background:#1F9D55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer");b.onclick=function(){location.reload();};d.appendChild(b);document.body.appendChild(d);}function chk(first){try{fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():"";}).then(function(t){var m=/name="owm-build" content="(\d+)"/.exec(t);if(!m||+m[1]<=+B)return;if(first){var last=+ss("owm-upd")||0;if(Date.now()-last>60000){ss("owm-upd",String(Date.now()));location.reload();return;}}if(DASH)bar();},function(){});}catch(e){}}setTimeout(function(){chk(true);},1200);if(DASH){setInterval(function(){if(!document.hidden)chk(false);},60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk(false);});}})();</script>
 
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -201,6 +201,11 @@ select.ctl,input.ctl{height:38px;border:1px solid var(--line-2);border-radius:8p
 .pay-parts{display:grid;gap:8px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
 .pay-parts[hidden],#statusF[hidden]{display:none!important}
 .pay-part{font-weight:500}
+.af-tbl{display:grid;gap:6px;margin-top:4px}
+.af-row{display:grid;grid-template-columns:20px minmax(0,1fr) auto;column-gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);cursor:pointer}
+.af-row b{grid-column:2}.af-row span{grid-column:2;font-size:13px;color:var(--muted)}.af-row em{grid-column:3;grid-row:1/3;font-style:normal;font-weight:700;color:var(--green-text);white-space:nowrap}
+.af-list{display:flex;flex-wrap:wrap;gap:6px}
+.af-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 10px 4px 5px;font-size:13px;background:var(--surface)}
 .plan-wrap[hidden]{display:none!important}
 .svc-add{display:flex;gap:8px;margin-top:10px;max-width:420px}
 .svc-add input{flex:1;min-width:0}
@@ -1049,7 +1054,7 @@ label .opt{font-weight:400;color:var(--muted);font-size:.85em;margin-left:4px}
     <path id="ow-body" fill-rule="evenodd" d="M575.5 1254.3C516.1 1249.0 475.6 1236.0 431.0 1207.7C399.4 1187.6 368.4 1158.1 344.9 1125.5C275.9 1030.0 272.2 902.1 335.3 793.0C357.4 754.7 396.1 713.3 435.0 686.3C555.2 603.0 713.9 607.7 827.0 698.1C859.3 724.0 885.8 752.6 935.5 815.5C939.9 821.0 944.9 827.4 946.8 829.8C948.7 832.2 959.6 846.3 971.1 861.3C1004.8 905.1 1006.1 906.7 1008.6 909.1C1012.4 912.7 1010.6 914.7 1040.5 872.9C1044.3 867.5 1050.6 858.8 1054.3 853.6C1073.5 826.9 1094.7 813.8 1124.5 810.1C1136.6 808.6 1238.4 808.6 1250.5 810.1C1274.1 813.0 1297.4 825.4 1310.9 842.4C1316.2 849.0 1338.7 881.1 1353.0 902.4C1367.0 923.2 1373.5 932.3 1375.4 933.4C1378.3 935.2 1375.8 940.7 1407.8 864.5C1416.6 843.6 1430.2 811.0 1438.0 792.0C1456.5 747.2 1457.5 745.2 1468.8 732.2C1477.6 722.1 1487.0 716.1 1539.5 687.3C1545.0 684.3 1553.5 679.4 1558.5 676.5C1563.5 673.6 1573.3 668.0 1580.5 664.0C1596.3 655.2 1607.4 649.0 1616.0 644.0C1622.3 640.3 1635.7 632.8 1672.5 612.0C1695.2 599.2 1699.2 598.3 1702.1 605.2C1704.5 610.8 1704.1 744.1 1701.7 753.5C1695.3 778.9 1680.8 795.3 1648.5 813.5C1613.7 833.1 1611.6 835.9 1583.0 904.5C1580.9 909.5 1578.0 916.2 1576.5 919.5C1575.0 922.8 1569.3 935.9 1563.8 948.5C1558.3 961.1 1550.2 979.8 1545.8 990.0C1541.4 1000.2 1536.1 1012.5 1534.0 1017.5C1531.9 1022.5 1525.0 1038.7 1518.5 1053.5C1512.1 1068.3 1500.8 1094.5 1493.5 1111.5C1463.7 1180.9 1464.0 1180.3 1454.5 1190.8C1430.0 1217.7 1391.0 1223.5 1359.2 1204.9C1352.1 1200.6 1337.6 1186.2 1333.2 1179.0C1331.4 1176.0 1327.7 1169.9 1325.1 1165.5C1320.7 1158.1 1315.3 1149.5 1283.7 1099.5C1277.1 1089.0 1269.6 1077.1 1267.0 1073.0C1264.4 1068.9 1259.6 1061.2 1256.3 1056.0C1249.1 1044.5 1235.2 1022.5 1218.3 995.5C1211.4 984.5 1204.1 972.8 1202.2 969.5C1197.5 961.6 1195.0 958.9 1192.7 959.2C1191.4 959.4 1185.7 967.2 1176.1 981.7C1163.7 1000.5 1141.0 1033.9 1107.9 1082.0C1101.7 1091.0 1063.9 1145.8 1058.9 1153.0C1058.0 1154.4 1052.6 1162.2 1047.0 1170.5C1034.9 1188.1 1031.9 1191.6 1026.5 1194.1C1015.2 1199.4 1013.5 1197.9 983.4 1157.6C969.4 1138.9 956.3 1121.5 954.4 1119.0C952.6 1116.5 944.1 1105.3 935.7 1094.0C915.8 1067.3 909.3 1059.0 874.1 1013.7C863.9 1000.6 852.8 986.4 849.5 982.1C846.2 977.9 837.9 967.3 831.0 958.6C824.1 949.9 817.1 941.1 815.5 938.9C813.9 936.8 809.1 930.9 804.9 925.8C800.8 920.7 790.2 907.5 781.5 896.5C772.8 885.5 763.1 873.4 760.1 869.6C757.0 865.8 752.2 859.9 749.5 856.5C732.8 835.8 721.5 824.4 707.4 814.2C662.5 781.7 603.0 775.8 549.7 798.5C490.7 823.7 450.9 879.9 447.4 943.1C441.4 1052.6 548.4 1135.7 650.1 1100.4C678.3 1090.6 693.1 1080.1 732.9 1041.2C799.8 975.9 808.2 968.0 810.5 968.0C813.2 968.0 816.9 972.5 848.3 1013.5C859.6 1028.3 874.0 1047.0 880.1 1055.0C896.1 1075.6 902.0 1084.0 902.0 1086.1C902.0 1091.4 843.2 1147.6 809.5 1174.5C742.3 1228.2 669.3 1255.6 595.5 1254.8C586.7 1254.7 577.7 1254.5 575.5 1254.3Z"/>
     <path id="ow-ribbon" fill-rule="evenodd" d="M1013.2 1193.9C1009.5 1192.0 1005.3 1186.9 983.4 1157.6C969.4 1138.9 956.3 1121.5 954.4 1119.0C944.7 1106.3 917.0 1069.1 913.2 1063.9C907.8 1056.2 907.9 1055.0 914.3 1046.5C924.5 1032.9 978.7 959.4 981.8 955.0C983.5 952.5 989.7 944.0 995.5 936.0C1001.4 928.0 1008.3 918.4 1010.9 914.5C1013.5 910.6 1019.6 901.9 1024.5 895.1C1029.5 888.2 1036.7 878.3 1040.5 872.9C1044.3 867.5 1050.6 858.8 1054.3 853.6C1073.5 826.9 1094.7 813.8 1124.5 810.1C1136.6 808.6 1238.4 808.6 1250.5 810.1C1281.7 813.9 1302.0 827.8 1324.4 860.8C1332.0 872.0 1331.9 873.5 1323.8 872.3C1301.9 869.4 1281.3 872.7 1261.5 882.5C1237.3 894.4 1224.9 907.9 1190.5 960.0C1163.6 1000.7 1161.3 1004.2 1136.0 1041.0C1122.6 1060.5 1106.3 1084.4 1099.7 1094.0C1093.1 1103.6 1081.6 1120.3 1074.2 1131.0C1066.7 1141.7 1059.9 1151.6 1058.9 1153.0C1058.0 1154.4 1052.6 1162.2 1047.0 1170.5C1029.8 1195.5 1024.3 1199.4 1013.2 1193.9Z"/>
     <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
-    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></symbol><symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></symbol>
     <symbol id="i-leads" viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></symbol>
     <symbol id="i-quote" viewBox="0 0 24 24"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
     <symbol id="i-clients" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></symbol>
@@ -1445,7 +1450,7 @@ function cycDay(c){ var d=parseInt(String(c&&c.start||"").slice(8,10),10); retur
 function dayIn(ym,d){ return ym+"-"+String(Math.min(d,daysIn(ym))).padStart(2,"0"); }
 function ymAdd(ym,n){ var y=+ym.slice(0,4), m=+ym.slice(5,7)-1+n; y+=Math.floor(m/12); m=((m%12)+12)%12; return y+"-"+String(m+1).padStart(2,"0"); }
 function cycleOf(c,ym){ var d=cycDay(c); return {from:dayIn(ym,d),to:addDays(dayIn(ymAdd(ym,1),d),-1),ym:ym}; }
-function curCycle(c){ var ym=TODAY.slice(0,7); if(TODAY<dayIn(ym,cycDay(c))) ym=ymAdd(ym,-1); return cycleOf(c,ym); }
+function curCycle(c){ if(c&&c.start&&c.start>TODAY) return cycleOf(c,c.start.slice(0,7)); var ym=TODAY.slice(0,7); if(TODAY<dayIn(ym,cycDay(c))) ym=ymAdd(ym,-1); return cycleOf(c,ym); }
 function cycleFor(c,ym){ return ym===YM?curCycle(c):cycleOf(c,ym); }
 function cycleText(c,ym){ var k=cycleFor(c,ym); return cycDay(c)===1?fmtM(k.ym):fmtD(k.from)+" – "+fmtD(k.to)+" "+k.to.slice(0,4); }
 function planTitle(c,ym){ var k=cycleFor(c,ym); return cycDay(c)===1?fmtM(k.ym).split(" ")[0]+" plan":"Plan "+fmtD(k.from)+" – "+fmtD(k.to); }
@@ -2398,7 +2403,7 @@ R_["m-client"]=function(){
     '<div class="actions"><a class="btn" href="'+waLink(c.phone,"Hi "+first(c.contact)+", ")+'" target="_blank" rel="noopener">'+ico("wa")+'WhatsApp</a><button class="btn" data-act="editClient" data-id="'+c.id+'">Edit</button><button class="btn" data-act="newEvent" data-client="'+c.id+'">'+ico("cal")+'Schedule</button><button class="btn" data-act="calPdf" data-client="'+c.id+'">'+ico("dl")+'Posting calendar</button><button class="btn primary" data-act="newInvoice" data-client="'+c.id+'">'+ico("inv")+'Invoice</button></div></div>'+
     '<div class="grid4">'+kpi(c.once?"One-time fee":"Monthly fee",money0(c.fee),c.services.join(" · ")||"—")+kpi("Client since",fmtDY(c.start),esc(c.industry||""))+kpi("Unpaid",money0(unpaid),invs.filter(function(i){ return i.status!=="paid"; }).length+" invoice(s)",unpaid>0&&invs.some(function(i){ return invStatus(i)==="overdue"; }))+kpi("Ads running",String(camps.filter(function(k){ return k.status==="Running"; }).length),money0(sum(camps.filter(function(k){ return k.status==="Running"; }),function(k){ return +k.budget; }))+"/month budget")+'</div>';
   var pp=planProgress(c,YM);
-  var planCard='<section class="card"><div class="card-h"><h2>'+planTitle(c,YM)+'</h2><button class="btn sm ghost" data-act="editClient" data-id="'+c.id+'">Edit plan</button></div>'+
+  var planCard='<section class="card"><div class="card-h"><h2>'+planTitle(c,YM)+'</h2><span class="spacer"></span><button class="btn sm" data-act="autoFill" data-client="'+c.id+'">'+ico("spark")+'Auto-fill</button><button class="btn sm ghost" data-act="editClient" data-id="'+c.id+'">Edit plan</button></div>'+
     (pp.length? '<div class="list">'+pp.map(function(r){ var miss=Math.max(0,r.planned-r.scheduled);
       return '<div class="li plan-row"><div class="li-main"><div class="plan-top"><b>'+r.label+'</b><span>'+(r.key==="shoots"?r.done+' of '+(r.planned||r.scheduled)+' done':r.scheduled+' of '+(r.planned||r.scheduled)+' scheduled')+'</span></div>'+planBar(r.done,r.scheduled,r.planned)+
         '<div class="li-s">'+r.scheduled+' scheduled'+(miss?' · <span style="color:var(--red)">'+miss+' not scheduled yet</span>':(r.planned&&r.scheduled>r.planned?' · '+(r.scheduled-r.planned)+' extra':''))+'</div></div>'+
@@ -3470,7 +3475,7 @@ function clientCalView(c){
   var on=calSentOn(c.id,ym), readyN=posts.filter(function(e){ var s=postStage(e); return !e.done && s==="ready" && e.date>=TODAY; }).length;
   var html='<button class="back" data-act="calView" data-v="clients">'+ico("left")+'All client calendars</button>'+
     '<div class="cp-head">'+cbadge(c,"lg")+'<div class="cp-title"><h1>'+esc(c.name)+'</h1><p>'+fmtM(ym)+' · posting & shooting calendar'+(on?' · <span style="color:var(--green-text)">sent '+fmtDY(on)+'</span>':'')+'</p></div>'+
-    '<div class="actions"><button class="btn" data-act="newEvent" data-client="'+c.id+'" data-date="'+ui.selDay+'" data-kind="post">'+ico("plus")+'Post</button><button class="btn" data-act="newEvent" data-client="'+c.id+'" data-date="'+ui.selDay+'" data-kind="shoot">'+ico("cam")+'Shoot</button><button class="btn" data-act="bulkPlan" data-client="'+c.id+'" data-m="'+ym+'">'+ico("cal")+'Plan many</button><button class="btn primary" data-act="calPdfOpen" data-client="'+c.id+'" data-m="'+ym+'">'+ico("dl")+'PDF & send</button></div></div>';
+    '<div class="actions"><button class="btn" data-act="newEvent" data-client="'+c.id+'" data-date="'+ui.selDay+'" data-kind="post">'+ico("plus")+'Post</button><button class="btn" data-act="newEvent" data-client="'+c.id+'" data-date="'+ui.selDay+'" data-kind="shoot">'+ico("cam")+'Shoot</button><button class="btn" data-act="autoFill" data-client="'+c.id+'">'+ico("spark")+'Auto-fill</button><button class="btn" data-act="bulkPlan" data-client="'+c.id+'" data-m="'+ym+'">'+ico("cal")+'Plan many</button><button class="btn primary" data-act="calPdfOpen" data-client="'+c.id+'" data-m="'+ym+'">'+ico("dl")+'PDF & send</button></div></div>';
   html+=monthBlock(c.id);
   return html;
 }
@@ -3598,6 +3603,43 @@ function bulkPlanModal(cid,ym){
   var md=document.querySelector("#modalRoot .modal"); if(md) md.classList.add("bp-modal");
   bpRefresh(false);
 }
+/* ---------- Auto-fill: spread the monthly plan evenly over the client's period ---------- */
+var AF=null;
+function afCompute(){ var c=client(AF.cid), k=AF.next?cycleOf(c,ymAdd(curCycle(c).ym,1)):curCycle(c), p=planFor(c), out=[], rows=[];
+  var start=k.from<TODAY?TODAY:k.from, L=start>k.to?0:Math.round((parse(k.to)-parse(start))/864e5)+1;
+  FMTS.forEach(function(f){ if(f[0]==="shoots") return; var N=+p[f[0]]||0; if(!N) return;
+    var ex=S.events.filter(function(e){ return e.clientId===c.id && e.type==="post" && evFmt(e)===f[1] && e.date>=k.from && e.date<=k.to; });
+    var m=Math.max(0,N-ex.length), on=AF.off.indexOf(f[1])<0, dates=[];
+    if(m && L && on){ var exF=ex.filter(function(e){ return e.date>=start; }).map(function(e){ return Math.round((parse(e.date)-parse(start))/864e5); });
+      if(!exF.length || m+exF.length>L){ var used={}; out.forEach(function(o){ used[o.date]=1; }); S.events.forEach(function(e){ if(e.clientId===c.id && e.type==="post") used[e.date]=1; });
+        var bestP=null,bestHit=1e9; [0.5,0.25,0.75,0,0.125,0.375,0.625,0.875].forEach(function(ph){ var hit=0, tmp=[]; for(var j=0;j<m;j++){ var dd=Math.min(L-1,Math.floor((j+ph)*L/m)); tmp.push(dd); if(used[addDays(start,dd)]) hit++; } if(hit<bestHit){ bestHit=hit; bestP=tmp; } });
+        dates=bestP; }
+      else { var placed=exF.slice(); for(var n=0;n<m;n++){ var best=-1,bs=-1; for(var d=0;d<L;d++){ var sc=Math.min(2*d+1,2*(L-1-d)+1); placed.forEach(function(q){ sc=Math.min(sc,Math.abs(d-q)*2); }); if(sc>bs){ bs=sc; best=d; } } placed.push(best); dates.push(best); } dates.sort(function(a,b){ return a-b; }); }
+      dates.forEach(function(d){ out.push({date:addDays(start,d),fmt:f[1]}); }); }
+    rows.push({f:f,N:N,have:ex.length,add:on?(L?m:0):0,m:m,on:on}); });
+  out.sort(function(a,b){ return a.date<b.date?-1:(a.date>b.date?1:0); });
+  return {k:k,start:start,rows:rows,out:out}; }
+function afRender(){ var box=document.getElementById("afBody"); if(!box||!AF) return; var tm=document.getElementById("af-time"); if(tm&&tm.value) AF.time=tm.value;
+  var r=afCompute(), late=r.start>r.k.from;
+  box.innerHTML='<div class="af-tbl">'+r.rows.map(function(x){ return '<label class="af-row"><input type="checkbox" class="af-on" value="'+x.f[1]+'"'+(x.on?" checked":"")+(x.m?"":" disabled")+'><b>'+x.f[2]+'</b><span>'+x.N+' in the plan · '+x.have+' already placed</span><em>'+(x.m?(x.on?(x.add?'+'+x.add+' to add':'no days left'):'skipped'):'all placed')+'</em></label>'; }).join("")+'</div>'+
+    (late?'<p class="hint" style="margin:8px 0 0">This period already started, so new posts go from '+fmtD(r.start)+' to '+fmtD(r.k.to)+'.'+(r.out.length>Math.round((parse(r.k.to)-parse(r.start))/864e5)+1?' That\'s more posts than days left, so some days get more than one. You might prefer the next period.':'')+'</p>':'')+
+    (r.out.length?'<div class="section-t" style="margin-top:14px">'+r.out.length+' post'+(r.out.length===1?'':'s')+' will be added at '+esc(AF.time)+'</div><div class="af-list">'+r.out.map(function(o){ return '<span class="af-chip k-'+o.fmt.toLowerCase()+'"><i class="fl fl-'+o.fmt.toLowerCase()+'">'+FMT_L[o.fmt]+'</i>'+fmtDayS(o.date)+'</span>'; }).join("")+'</div>':'<p class="empty" style="margin-top:14px">Nothing to add: everything in the plan is already on the calendar.</p>');
+  var sb=document.getElementById("afSave"); if(sb){ sb.disabled=!r.out.length; sb.textContent=r.out.length?"Add "+r.out.length+" post"+(r.out.length===1?"":"s"):"Nothing to add"; }
+  var pl=document.getElementById("afPeriod"); if(pl) pl.innerHTML=[0,1].map(function(n){ var c=client(AF.cid), kk=n?cycleOf(c,ymAdd(curCycle(c).ym,1)):curCycle(c); return '<option value="'+n+'"'+((+AF.next)===n?" selected":"")+'>'+(n?"Next period: ":"This period: ")+fmtD(kk.from)+' – '+fmtD(kk.to)+'</option>'; }).join(""); }
+A.autoFill=function(el){ var c=client(el.dataset.client); if(!c.id) return;
+  if(c.once || !planTotal(c)){ toast(c.once?"One-time clients have no monthly plan.":"Set "+c.name+"'s monthly plan first (Edit client)."); return; }
+  var kc=curCycle(c), left=Math.round((parse(kc.to)-parse(kc.from<TODAY?TODAY:kc.from))/864e5)+1;
+  AF={cid:c.id,next:left<7?1:0,time:S.settings.lastFillTime||"18:00",off:[]};
+  openModal("Auto-fill "+c.name,
+    '<form class="form" id="afForm" onsubmit="return false"><p class="hint" style="margin:0">Spreads the monthly plan evenly over the period. Posts already on the calendar count, so only what is missing is added. You can drag or edit any post after.</p>'+
+    '<div class="frow"><div class="f"><label for="afPeriod">Period</label><select id="afPeriod"></select></div><div class="f"><label for="af-time">Time</label><input id="af-time" type="time" value="'+AF.time+'"></div></div>'+
+    '<div id="afBody"></div></form>',
+    '<button class="btn" data-act="closeModal">Cancel</button><button class="btn primary" id="afSave" data-act="afSave">Add</button>');
+  afRender(); };
+A.afSave=function(){ if(!AF) return; var r=afCompute(), c=client(AF.cid); if(!r.out.length) return;
+  r.out.forEach(function(o){ S.events.push({id:uid(),clientId:c.id,type:"post",format:o.fmt,title:o.fmt,date:o.date,time:AF.time,location:"",done:false,pstatus:"",media:[]}); });
+  S.settings.lastFillTime=AF.time; save(); closeModal(); ui.calMonth=r.out[0].date.slice(0,7); render();
+  toast(r.out.length+" post"+(r.out.length===1?"":"s")+" added to "+c.name+"'s calendar ("+fmtD(r.k.from)+" – "+fmtD(r.k.to)+")"); AF=null; };
 A.bulkPlan=function(el){ bulkPlanModal(el&&el.dataset.client,el&&el.dataset.m); };
 A.bpKind=function(el){ bpSync(); BP.kind=el.dataset.v; bpRefresh(false); };
 A.bpMonth=function(el){ bpSync(); if(BP.rows.length && !window.__bpWarned){ window.__bpWarned=1; } BP.ym=addMonths(BP.ym,+el.dataset.n); bpRefresh(false); };
@@ -3839,6 +3881,9 @@ document.addEventListener("change",function(ev){
   else if(el.dataset.act==="evFiles"){ addEvFiles(el.files); el.value=""; }
   else if(el.dataset.act==="evCover"){ var cf=el.files[0]; if(cf){ var cid="m"+uid(); mediaPut(cid,cf); EV.cover=cid; renderEvCover(); } el.value=""; }
   else if(el.id==="c-bill") planToggle();
+  else if(AF && el.id==="afPeriod"){ AF.next=+el.value; afRender(); }
+  else if(AF && el.id==="af-time"){ AF.time=el.value||AF.time; afRender(); }
+  else if(AF && el.classList && el.classList.contains("af-on")){ var fm=el.value; AF.off=AF.off.filter(function(x){ return x!==fm; }); if(!el.checked) AF.off.push(fm); afRender(); }
   else if(el.id==="d-pay2"){ if(el.checked){ var q1=document.getElementById("d-pay1"); if(q1) q1.checked=true; } }
   else if(el.id==="d-pay1"){ if(!el.checked){ var q2=document.getElementById("d-pay2"); if(q2) q2.checked=false; } }
   else if(el.id==="e-fmt"){ var fh=document.getElementById("e-fmt-hint"); if(fh) fh.textContent=FMT_HINT[el.value]||""; var cw=document.getElementById("e-cover-wrap"); if(cw) cw.hidden=el.value!=="Reel"; }
