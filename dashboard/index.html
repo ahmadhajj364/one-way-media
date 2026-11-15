@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="owm-build" content="1794703022">
-<script>(function(){var B="1794703022",DASH=true;function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v);}catch(e){return null;}}function bar(){if(document.getElementById("owm-upd"))return;var d=document.createElement("div");d.id="owm-upd";d.setAttribute("style","position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;background:#0B2545;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font:600 14px/1.3 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)");d.innerHTML="<span>A new version is ready</span>";var b=document.createElement("button");b.textContent="Refresh";b.setAttribute("style","background:#1F9D55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer");b.onclick=function(){location.reload();};d.appendChild(b);document.body.appendChild(d);}function chk(first){try{fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():"";}).then(function(t){var m=/name="owm-build" content="(\d+)"/.exec(t);if(!m||+m[1]<=+B)return;if(first){var last=+ss("owm-upd")||0;if(Date.now()-last>60000){ss("owm-upd",String(Date.now()));location.reload();return;}}if(DASH)bar();},function(){});}catch(e){}}setTimeout(function(){chk(true);},1200);if(DASH){setInterval(function(){if(!document.hidden)chk(false);},60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk(false);});}})();</script>
+<meta name="owm-build" content="1794703720">
+<script>(function(){var B="1794703720",DASH=true;function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v);}catch(e){return null;}}function bar(){if(document.getElementById("owm-upd"))return;var d=document.createElement("div");d.id="owm-upd";d.setAttribute("style","position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;background:#0B2545;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font:600 14px/1.3 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)");d.innerHTML="<span>A new version is ready</span>";var b=document.createElement("button");b.textContent="Refresh";b.setAttribute("style","background:#1F9D55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer");b.onclick=function(){location.reload();};d.appendChild(b);document.body.appendChild(d);}function chk(first){try{fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():"";}).then(function(t){var m=/name="owm-build" content="(\d+)"/.exec(t);if(!m||+m[1]<=+B)return;if(first){var last=+ss("owm-upd")||0;if(Date.now()-last>60000){ss("owm-upd",String(Date.now()));location.reload();return;}}if(DASH)bar();},function(){});}catch(e){}}setTimeout(function(){chk(true);},1200);if(DASH){setInterval(function(){if(!document.hidden)chk(false);},60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk(false);});}})();</script>
 
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -201,6 +201,17 @@ select.ctl,input.ctl{height:38px;border:1px solid var(--line-2);border-radius:8p
 .pay-parts{display:grid;gap:8px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
 .pay-parts[hidden],#statusF[hidden]{display:none!important}
 .pay-part{font-weight:500}
+.bp-day{position:relative}
+.bp-day.multi-day{border-color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber)}
+.bp-cnt{position:absolute;top:2px;right:3px;min-width:15px;height:15px;padding:0 3px;border-radius:8px;background:var(--amber);color:#fff;font:700 10px/15px system-ui,sans-serif;font-style:normal;text-align:center}
+.bp-marks .m-old.multi{width:auto;min-width:14px;height:13px;padding:0 3px;border-radius:4px;color:#fff;font:700 9px/13px system-ui,sans-serif;font-style:normal;text-align:center}
+.bp-dup{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border-radius:9px;background:var(--amber-soft);color:var(--text);font-size:13px;margin-top:4px}
+.bp-dup svg{color:var(--amber);flex:none;width:16px;height:16px;margin-top:1px}
+.bp-row .bp-date{display:flex;flex-direction:column;align-items:flex-start;line-height:1.2}
+.bp-tag{display:inline-block;margin-top:2px;padding:0 5px;border-radius:5px;background:var(--green-soft);color:var(--green-text);font:700 10px/16px system-ui,sans-serif;font-style:normal;text-transform:uppercase;letter-spacing:.04em}
+.bp-tag.ed{background:var(--blue-soft,#E6EEF9);color:var(--blue,#1E5AA8)}
+.bp-row.is-new{background:color-mix(in srgb,var(--green) 5%,var(--surface))}
+.bp-delnote{padding:8px 10px;border-radius:9px;background:var(--red-soft);color:var(--red);font-size:13px;font-weight:600}
 .af-tbl{display:grid;gap:6px;margin-top:4px}
 .af-row{display:grid;grid-template-columns:20px minmax(0,1fr) auto;column-gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);cursor:pointer}
 .af-row b{grid-column:2}.af-row span{grid-column:2;font-size:13px;color:var(--muted)}.af-row em{grid-column:3;grid-row:1/3;font-style:normal;font-weight:700;color:var(--green-text);white-space:nowrap}
@@ -3556,42 +3567,63 @@ document.addEventListener("keydown",function(ev){ if(ev.key==="Enter" && ev.targ
 
 /* ---- bulk planner: many posts and shoots in one go ---- */
 var BP=null;
-function bpExisting(){ return S.events.filter(function(e){ return e.clientId===BP.cid && e.date.slice(0,7)===BP.ym; }); }
+/* everything already on the calendar is loaded into the list, so it can be edited or removed here */
+function bpLoad(){ var key=BP.cid+"|"+BP.ym; if(BP.loaded[key]) return; BP.loaded[key]=1;
+  S.events.filter(function(e){ return e.clientId===BP.cid && e.date.slice(0,7)===BP.ym && BP.del.indexOf(e.id)<0; }).forEach(function(e){ var k=evKind(e);
+    BP.rows.push({id:"x"+e.id,eid:e.id,date:e.date,kind:k,title:e.title||"",time:e.time||"",orig:{kind:k,title:e.title||"",time:e.time||""}}); }); }
+function bpExisting(){ return []; }
+function bpChanged(r){ return r.eid && (r.kind!==r.orig.kind || r.title!==r.orig.title || r.time!==r.orig.time); }
+function bpCounts(){ var add=BP.rows.filter(function(r){ return !r.eid; }).length, ed=BP.rows.filter(bpChanged).length, del=BP.del.length; return {add:add,ed:ed,del:del,all:add+ed+del}; }
 function bpSync(){ document.querySelectorAll("#bpRows [data-bp]").forEach(function(r){ var x=BP.rows.find(function(y){ return y.id===r.dataset.bp; }); if(!x) return;
   x.kind=r.querySelector(".bp-kind").value; x.title=r.querySelector(".bp-title").value; x.time=r.querySelector(".bp-time").value; }); }
+document.addEventListener("change",function(ev){ var rowEl=BP && ev.target.closest && ev.target.closest("#bpRows [data-bp]"); if(!rowEl) return; bpSync();
+  var r=BP.rows.find(function(x){ return x.id===rowEl.dataset.bp; }); if(!r) return;
+  if(ev.target.classList.contains("bp-kind")){ bpRefresh(false); return; }
+  rowEl.classList.toggle("is-ed",bpChanged(r)); var dt=rowEl.querySelector(".bp-date"), tg=dt&&dt.querySelector(".bp-tag.ed");
+  if(r.eid){ if(bpChanged(r)&&!tg) dt.insertAdjacentHTML("beforeend",'<em class="bp-tag ed">edited</em>'); if(!bpChanged(r)&&tg) tg.remove(); }
+  var bc=bpCounts(), sb=document.getElementById("bpSave"); if(sb){ sb.textContent=bc.all?"Save "+bc.all+" change"+(bc.all===1?"":"s"):"Save"; sb.disabled=!bc.all; } var s2=document.getElementById("bpSave2"); if(s2) s2.disabled=!bc.all; });
 function bpPlanLine(){ var c=client(BP.cid), pl=planFor(c), ex=bpExisting(), cnt={Reel:0,Post:0,Story:0,Shoot:0};
-  ex.forEach(function(e){ cnt[evKind(e)]++; }); BP.rows.forEach(function(r){ cnt[r.kind]++; });
+  BP.rows.forEach(function(r){ if(r.date.slice(0,7)===BP.ym) cnt[r.kind]++; });
   var m=[["Reel","reels"],["Post","posts"],["Story","stories"],["Shoot","shoots"]];
   return m.map(function(x){ var want=+pl[x[1]]||0, have=cnt[x[0]]; return '<span class="bp-stat fl-'+x[0].toLowerCase()+(want&&have>=want?" ok":"")+'"><i class="fl fl-'+x[0].toLowerCase()+'">'+(x[0]==="Shoot"?"":FMT_L[x[0]])+'</i>'+(x[0]==="Story"?"Stories":x[0]+"s")+' <b>'+have+(want?' / '+want:'')+'</b></span>'; }).join("")+(pl.reels||pl.posts||pl.stories||pl.shoots?'<span class="hint">has / monthly plan</span>':'<span class="hint">No monthly plan set for this client</span>'); }
 function bpGridHTML(){ var ym=BP.ym, f=parse(ym+"-01"), off=(f.getDay()+6)%7, n=daysIn(ym), ex={}, nw={};
-  bpExisting().forEach(function(e){ (ex[e.date]=ex[e.date]||[]).push(evKind(e)); }); BP.rows.forEach(function(r){ (nw[r.date]=nw[r.date]||[]).push(r.kind); });
+  BP.rows.forEach(function(r){ var t=r.eid?ex:nw; (t[r.date]=t[r.date]||[]).push(r.kind); });
   var h='<div class="bp-dow">'+["M","T","W","T","F","S","S"].map(function(d){ return '<span>'+d+'</span>'; }).join("")+'</div><div class="bp-grid">';
   for(var i=0;i<off;i++) h+='<span></span>';
   for(var d=1;d<=n;d++){ var ds=ym+"-"+pad(d), past=ds<TODAY;
-    h+='<button type="button" class="bp-day'+(past?" past":"")+(nw[ds]?" has-new":"")+(ds===TODAY?" today":"")+'" data-act="bpDay" data-date="'+ds+'" aria-label="'+fmtDay(ds)+'"><span class="bp-dn">'+d+'</span><span class="bp-marks">'+
-      (ex[ds]||[]).map(function(k){ return '<i class="m-old fl-'+k.toLowerCase()+'" title="Already planned: '+k+'"></i>'; }).join("")+
+    var tot=(ex[ds]||[]).length+(nw[ds]||[]).length;
+    h+='<button type="button" class="bp-day'+(past?" past":"")+(nw[ds]?" has-new":"")+(tot>1?" multi-day":"")+(ds===TODAY?" today":"")+'" data-act="bpDay" data-date="'+ds+'" aria-label="'+fmtDay(ds)+(tot?", "+tot+" item"+(tot===1?"":"s"):"")+'"><span class="bp-dn">'+d+(tot>1?'<em class="bp-cnt">'+tot+'</em>':'')+'</span><span class="bp-marks">'+
+      (function(){ var g={}, o=[]; (ex[ds]||[]).forEach(function(k){ if(!g[k]){ g[k]=0; o.push(k); } g[k]++; });
+        return o.map(function(k){ return '<i class="m-old fl-'+k.toLowerCase()+(g[k]>1?' multi':'')+'" title="On the calendar: '+g[k]+' '+k+'">'+(g[k]>1?g[k]:'')+'</i>'; }).join(""); })()+
       (function(){ var g={}, o=[]; (nw[ds]||[]).forEach(function(k){ if(!g[k]){ g[k]=0; o.push(k); } g[k]++; });
         return o.map(function(k){ return '<i class="m-new fl fl-'+k.toLowerCase()+(g[k]>1?' multi':'')+'">'+(k==="Shoot"?"":FMT_L[k]+(g[k]>1?g[k]:""))+'</i>'; }).join(""); })()+'</span></button>'; }
   return h+'</div>'; }
 function bpRowsHTML(){ var rows=BP.rows.slice().sort(function(a,b){ return a.date!==b.date?(a.date<b.date?-1:1):(a.kind==="Shoot"?-1:1); });
-  if(!rows.length) return '<div class="empty" style="padding:18px">Nothing added yet. Pick a type, then click days on the calendar.</div>';
-  return rows.map(function(r){ return '<div class="bp-row k-'+r.kind.toLowerCase()+'" data-bp="'+r.id+'"><span class="bp-date"><b>'+parse(r.date).toLocaleDateString("en-GB",{weekday:"short"})+'</b> '+dmyFmt(r.date).slice(0,5)+'</span>'+
+  if(!rows.length) return '<div class="empty" style="padding:18px">Nothing planned this month yet. Pick a type, then click days on the calendar.</div>';
+  var per={}, lastD=""; rows.forEach(function(r){ per[r.date]=(per[r.date]||0)+1; });
+  return rows.map(function(r){ var head="";
+    if(per[r.date]>1 && r.date!==lastD){ var g={}; rows.forEach(function(x){ if(x.date===r.date) g[x.kind]=(g[x.kind]||0)+1; });
+      head='<div class="bp-dup">'+ico("alert")+'<span><b>'+fmtDayS(r.date)+'</b> has '+per[r.date]+' items: '+Object.keys(g).map(function(k){ return g[k]+' '+(k==="Shoot"?(g[k]>1?"shoots":"shoot"):(k==="Story"?(g[k]>1?"stories":"story"):k.toLowerCase()+(g[k]>1?"s":""))); }).join(", ")+'. Remove any extras with ✕.</span></div>'; }
+    lastD=r.date;
+    return head+'<div class="bp-row k-'+r.kind.toLowerCase()+(r.eid?" is-ex":" is-new")+(bpChanged(r)?" is-ed":"")+'" data-bp="'+r.id+'"><span class="bp-date"><b>'+parse(r.date).toLocaleDateString("en-GB",{weekday:"short"})+'</b> '+dmyFmt(r.date).slice(0,5)+(r.eid?(bpChanged(r)?'<em class="bp-tag ed">edited</em>':''):'<em class="bp-tag">new</em>')+'</span>'+
     '<select class="bp-kind" aria-label="Type">'+["Reel","Post","Story","Shoot"].map(function(k){ return '<option value="'+k+'"'+(k===r.kind?" selected":"")+'>'+(k==="Post"?"Post / carousel":(k==="Shoot"?"Shoot day":k))+'</option>'; }).join("")+'</select>'+
     '<input class="bp-title" value="'+esc(r.title)+'" placeholder="'+(r.kind==="Shoot"?"Shoot (optional note)":"Topic (optional)")+'" aria-label="Title">'+
-    '<input class="bp-time" type="time" value="'+esc(r.time)+'" aria-label="Time"><button type="button" class="icon-btn" data-act="bpDel" data-id="'+r.id+'" aria-label="Remove">'+ico("x")+'</button></div>'; }).join(""); }
+    '<input class="bp-time" type="time" value="'+esc(r.time)+'" aria-label="Time"><button type="button" class="icon-btn" data-act="bpDel" data-id="'+r.id+'" aria-label="'+(r.eid?'Delete from the calendar':'Remove')+'" title="'+(r.eid?'Delete from the calendar':'Remove')+'">'+ico("x")+'</button></div>'; }).join("")+
+    (BP.del.length?'<div class="bp-delnote">'+BP.del.length+' item'+(BP.del.length===1?'':'s')+' will be deleted from the calendar when you save.</div>':''); }
 function bpRefresh(keep){ if(keep!==false) bpSync();
   var g=document.getElementById("bpGrid"); if(g) g.innerHTML=bpGridHTML();
   var r=document.getElementById("bpRows"); if(r) r.innerHTML=bpRowsHTML();
   var p=document.getElementById("bpPlan"); if(p) p.innerHTML=bpPlanLine();
   var m=document.getElementById("bpMonth"); if(m) m.textContent=fmtM(BP.ym);
-  var s=document.getElementById("bpSave"); if(s){ s.textContent=BP.rows.length?"Save "+BP.rows.length+" item"+(BP.rows.length===1?"":"s"):"Save"; s.disabled=!BP.rows.length; }
-  var s2=document.getElementById("bpSave2"); if(s2) s2.disabled=!BP.rows.length;
+  var bc=bpCounts(), s=document.getElementById("bpSave"); if(s){ s.textContent=bc.all?"Save "+bc.all+" change"+(bc.all===1?"":"s"):"Save"; s.disabled=!bc.all; }
+  var s2=document.getElementById("bpSave2"); if(s2) s2.disabled=!bc.all;
   document.querySelectorAll(".bp-types .chip").forEach(function(b){ b.classList.toggle("on",b.dataset.v===BP.kind); });
   document.querySelectorAll(".bp-wd .chip").forEach(function(b){ b.classList.toggle("on",BP.wd.indexOf(+b.dataset.v)>-1); }); }
 function bulkPlanModal(cid,ym){
   if(!S.clients.length){ toast("Add a client first"); return; }
-  BP={cid:cid||ui.calClient||S.clients.filter(function(c){ return c.status==="active"; }).concat(S.clients)[0].id,ym:ym||ui.calMonth||YM,kind:"Reel",rows:[],wd:[]};
-  openModal("Plan many posts & shoots",
+  BP={cid:cid||ui.calClient||S.clients.filter(function(c){ return c.status==="active"; }).concat(S.clients)[0].id,ym:ym||ui.calMonth||YM,kind:"Reel",rows:[],wd:[],del:[],loaded:{}};
+  bpLoad();
+  openModal("Plan & edit posts and shoots",
     '<div class="bp">'+
     '<div class="bp-top"><div class="f"><label for="bp-client">Client</label><select id="bp-client">'+clientOptions(BP.cid)+'</select></div>'+
     '<div class="f"><span class="flabel">Month</span><div class="bp-mnav"><button type="button" class="icon-btn" data-act="bpMonth" data-n="-1" aria-label="Previous month">'+ico("left")+'</button><b id="bpMonth">'+fmtM(BP.ym)+'</b><button type="button" class="icon-btn" data-act="bpMonth" data-n="1" aria-label="Next month">'+ico("right")+'</button></div></div></div>'+
@@ -3599,12 +3631,12 @@ function bulkPlanModal(cid,ym){
     '<div class="bp-cols"><div>'+
       '<div class="section-t">1 · What are you adding?</div><div class="chips bp-types">'+["Reel","Post","Story","Shoot"].map(function(k){ return '<button type="button" class="chip k-'+k.toLowerCase()+'" data-act="bpKind" data-v="'+k+'">'+(k==="Shoot"?ico("cam"):'<i class="fl fl-'+k.toLowerCase()+'">'+FMT_L[k]+'</i>')+(k==="Post"?"Post / carousel":(k==="Shoot"?"Shoot day":k))+'</button>'; }).join("")+'</div>'+
       '<div class="section-t">2 · Click the days</div><div id="bpGrid"></div>'+
-      '<div class="bp-legend"><span><i class="m-old fl-reel"></i>already planned</span><span><i class="m-new fl fl-reel">R</i>adding now</span><span>click again to add another</span><span>right-click to take one off</span></div>'+
+      '<div class="bp-legend"><span><i class="m-old fl-reel"></i>on the calendar</span><span><i class="m-new fl fl-reel">R</i>new</span><span><em class="bp-cnt" style="position:static;display:inline-block">2</em> more than one that day</span><span>right-click a day to take one off</span></div>'+
       '<div class="bp-repeat"><span class="flabel">Or repeat every week on</span><div class="chips bp-wd">'+["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(function(d,i){ return '<button type="button" class="chip sm" data-act="bpWd" data-v="'+i+'">'+d+'</button>'; }).join("")+'</div><button type="button" class="btn sm" data-act="bpRepeat">'+ico("plus")+'Add to those days</button></div>'+
     '</div><div>'+
-      '<div class="section-t">3 · Check the list <span class="hint" style="text-transform:none;letter-spacing:0;font-weight:400">· leave the topic empty and it is numbered for you</span></div><div id="bpRows" class="bp-rows"></div>'+
+      '<div class="section-t">3 · Check and edit the list <span class="hint" style="text-transform:none;letter-spacing:0;font-weight:400">· everything on the calendar this month is here. Change the type, topic or time, or ✕ to delete</span></div><div id="bpRows" class="bp-rows"></div>'+
     '</div></div></div><p class="form-err" id="formErr" hidden></p>',
-    '<button class="btn ghost" data-act="bpClear">Clear</button><span class="spacer"></span><button class="btn" data-act="closeModal">Cancel</button><button class="btn" id="bpSave2" data-act="bpSave" data-next="1">Save & plan another client</button><button class="btn primary" id="bpSave" data-act="bpSave">Save</button>', true);
+    '<button class="btn ghost" data-act="bpClear">Clear new</button><span class="spacer"></span><button class="btn" data-act="closeModal">Cancel</button><button class="btn" id="bpSave2" data-act="bpSave" data-next="1">Save & plan another client</button><button class="btn primary" id="bpSave" data-act="bpSave">Save</button>', true);
   var md=document.querySelector("#modalRoot .modal"); if(md) md.classList.add("bp-modal");
   bpRefresh(false);
 }
@@ -3647,34 +3679,38 @@ A.afSave=function(){ if(!AF) return; var r=afCompute(), c=client(AF.cid); if(!r.
   toast(r.out.length+" post"+(r.out.length===1?"":"s")+" added to "+c.name+"'s calendar ("+fmtD(r.k.from)+" – "+fmtD(r.k.to)+")"); AF=null; };
 A.bulkPlan=function(el){ bulkPlanModal(el&&el.dataset.client,el&&el.dataset.m); };
 A.bpKind=function(el){ bpSync(); BP.kind=el.dataset.v; bpRefresh(false); };
-A.bpMonth=function(el){ bpSync(); if(BP.rows.length && !window.__bpWarned){ window.__bpWarned=1; } BP.ym=addMonths(BP.ym,+el.dataset.n); bpRefresh(false); };
+A.bpMonth=function(el){ bpSync(); BP.ym=addMonths(BP.ym,+el.dataset.n); bpLoad(); bpRefresh(false); };
 var BP_TIMES=["18:00","20:00","13:00","15:00","11:00","21:00"];
 A.bpDay=function(el){ bpSync(); var ds=el.dataset.date, hit=BP.rows.filter(function(r){ return r.date===ds && r.kind===BP.kind; });
   if(BP.kind==="Shoot" && hit.length){ BP.rows=BP.rows.filter(function(r){ return r!==hit[0]; }); bpRefresh(false); return; }
-  var sameDay=BP.rows.filter(function(r){ return r.date===ds && r.kind!=="Shoot"; }).length+S.events.filter(function(e){ return e.clientId===BP.cid && e.date===ds && e.type!=="shoot"; }).length;
+  var sameDay=BP.rows.filter(function(r){ return r.date===ds && r.kind!=="Shoot"; }).length;
   BP.rows.push({id:uid(),date:ds,kind:BP.kind,title:"",time:BP.kind==="Shoot"?"10:00":BP_TIMES[Math.min(sameDay,BP_TIMES.length-1)],cid:BP.cid});
   bpRefresh(false); if(hit.length) toast((hit.length+1)+" "+(BP.kind==="Story"?"stories":BP.kind.toLowerCase()+"s")+" on "+fmtDayS(ds)); };
 document.addEventListener("contextmenu",function(ev){ var b=ev.target.closest&&ev.target.closest('[data-act="bpDay"]'); if(!b||!BP) return; ev.preventDefault(); bpSync();
   var ds=b.dataset.date, hit=BP.rows.filter(function(r){ return r.date===ds && r.kind===BP.kind; }); if(!hit.length) hit=BP.rows.filter(function(r){ return r.date===ds; });
-  if(hit.length){ BP.rows=BP.rows.filter(function(r){ return r!==hit[hit.length-1]; }); bpRefresh(false); } });
-A.bpDel=function(el){ bpSync(); BP.rows=BP.rows.filter(function(r){ return r.id!==el.dataset.id; }); bpRefresh(false); };
+  if(hit.length){ bpDrop(hit[hit.length-1]); bpRefresh(false); } });
+function bpDrop(r){ if(r.eid && BP.del.indexOf(r.eid)<0) BP.del.push(r.eid); BP.rows=BP.rows.filter(function(x){ return x!==r; }); }
+A.bpDel=function(el){ bpSync(); var r=BP.rows.find(function(x){ return x.id===el.dataset.id; }); if(r) bpDrop(r); bpRefresh(false); };
 A.bpWd=function(el){ var v=+el.dataset.v, i=BP.wd.indexOf(v); if(i>-1) BP.wd.splice(i,1); else BP.wd.push(v); bpRefresh(); };
 A.bpRepeat=function(){ bpSync(); if(!BP.wd.length){ toast("Pick at least one weekday"); return; } var n=daysIn(BP.ym), added=0;
   for(var d=1;d<=n;d++){ var ds=BP.ym+"-"+pad(d), wd=(parse(ds).getDay()+6)%7; if(ds<TODAY || BP.wd.indexOf(wd)<0) continue;
     if(BP.rows.some(function(r){ return r.date===ds && r.kind===BP.kind; })) continue;
     BP.rows.push({id:uid(),date:ds,kind:BP.kind,title:"",time:BP.kind==="Shoot"?"10:00":"18:00"}); added++; }
   bpRefresh(false); toast(added?added+" "+(BP.kind==="Story"?(added===1?"story":"stories"):BP.kind.toLowerCase()+(added===1?"":"s"))+" added":"Nothing to add (past days are skipped)"); };
-A.bpClear=function(){ BP.rows=[]; bpRefresh(false); };
-A.bpSave=function(el){ bpSync(); if(!BP.rows.length) return; var cid=BP.cid, c=client(cid), num={};
-  bpExisting().forEach(function(e){ var k=evKind(e); num[k]=(num[k]||0)+1; });
-  var rows=BP.rows.slice().sort(function(a,b){ return a.date<b.date?-1:1; });
+A.bpClear=function(){ bpSync(); BP.rows=BP.rows.filter(function(r){ return r.eid; }); bpRefresh(false); };
+A.bpSave=function(el){ bpSync(); var bc=bpCounts(); if(!bc.all) return; var cid=BP.cid, c=client(cid), num={};
   snapEv();
+  if(BP.del.length) S.events=S.events.filter(function(e){ return BP.del.indexOf(e.id)<0; });
+  BP.rows.filter(bpChanged).forEach(function(r){ var e=S.events.find(function(x){ return x.id===r.eid; }); if(!e) return; var shoot=r.kind==="Shoot";
+    e.type=shoot?"shoot":"post"; e.format=shoot?"":r.kind; e.title=r.title.trim()||(shoot?"Monthly shoot":r.kind); e.time=r.time||e.time; if(!shoot){ e.done=false; } });
+  S.events.forEach(function(e){ if(e.clientId===cid && e.date.slice(0,7)===BP.ym){ var k=evKind(e); num[k]=(num[k]||0)+1; } });
+  var rows=BP.rows.filter(function(r){ return !r.eid; }).sort(function(a,b){ return a.date<b.date?-1:1; });
   rows.forEach(function(r){ var shoot=r.kind==="Shoot"; num[r.kind]=(num[r.kind]||0)+1;
     S.events.push({id:uid(),clientId:cid,type:shoot?"shoot":"post",format:shoot?"":r.kind,date:r.date,time:r.time||(shoot?"10:00":"18:00"),title:r.title.trim()||(shoot?"Monthly shoot":r.kind+" "+num[r.kind]),location:"",done:false,media:[],cover:"",caption:"",link:"",pstatus:""}); });
-  var n=rows.length; save();
-  if(el.dataset.next){ var ids=S.clients.map(function(x){ return x.id; }), nx=S.clients[(ids.indexOf(cid)+1)%ids.length]; var ym=BP.ym; render(); bulkPlanModal(nx.id,ym); undoToast(n+" item"+(n===1?"":"s")+" saved for "+c.name); return; }
-  closeModal(); ui.calMonth=BP.ym; render(); undoToast(n+" item"+(n===1?"":"s")+" added for "+c.name); };
-document.addEventListener("change",function(ev){ if(ev.target.id==="bp-client" && BP){ bpSync(); BP.cid=ev.target.value; bpRefresh(false); } });
+  save(); var msg=[bc.add?bc.add+" added":"",bc.ed?bc.ed+" changed":"",bc.del?bc.del+" deleted":""].filter(Boolean).join(", ")+" for "+c.name;
+  if(el.dataset.next){ var ids=S.clients.map(function(x){ return x.id; }), nx=S.clients[(ids.indexOf(cid)+1)%ids.length]; var ym=BP.ym; render(); bulkPlanModal(nx.id,ym); undoToast(msg); return; }
+  closeModal(); ui.calMonth=BP.ym; render(); undoToast(msg); };
+document.addEventListener("change",function(ev){ if(ev.target.id==="bp-client" && BP){ bpSync(); BP.cid=ev.target.value; BP.rows=BP.rows.filter(function(r){ return !r.eid; }); BP.del=[]; BP.loaded={}; bpLoad(); bpRefresh(false); } });
 
 A.go=function(el){ go(el.dataset.v); };
 A.webAdd=function(el){ webItemModal(el.dataset.k); };
