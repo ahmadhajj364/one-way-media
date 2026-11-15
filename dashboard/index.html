@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="owm-build" content="1794702649">
-<script>(function(){var B="1794702649",DASH=true;function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v);}catch(e){return null;}}function bar(){if(document.getElementById("owm-upd"))return;var d=document.createElement("div");d.id="owm-upd";d.setAttribute("style","position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;background:#0B2545;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font:600 14px/1.3 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)");d.innerHTML="<span>A new version is ready</span>";var b=document.createElement("button");b.textContent="Refresh";b.setAttribute("style","background:#1F9D55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer");b.onclick=function(){location.reload();};d.appendChild(b);document.body.appendChild(d);}function chk(first){try{fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():"";}).then(function(t){var m=/name="owm-build" content="(\d+)"/.exec(t);if(!m||+m[1]<=+B)return;if(first){var last=+ss("owm-upd")||0;if(Date.now()-last>60000){ss("owm-upd",String(Date.now()));location.reload();return;}}if(DASH)bar();},function(){});}catch(e){}}setTimeout(function(){chk(true);},1200);if(DASH){setInterval(function(){if(!document.hidden)chk(false);},60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk(false);});}})();</script>
+<meta name="owm-build" content="1794703022">
+<script>(function(){var B="1794703022",DASH=true;function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v);}catch(e){return null;}}function bar(){if(document.getElementById("owm-upd"))return;var d=document.createElement("div");d.id="owm-upd";d.setAttribute("style","position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;background:#0B2545;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font:600 14px/1.3 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)");d.innerHTML="<span>A new version is ready</span>";var b=document.createElement("button");b.textContent="Refresh";b.setAttribute("style","background:#1F9D55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer");b.onclick=function(){location.reload();};d.appendChild(b);document.body.appendChild(d);}function chk(first){try{fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():"";}).then(function(t){var m=/name="owm-build" content="(\d+)"/.exec(t);if(!m||+m[1]<=+B)return;if(first){var last=+ss("owm-upd")||0;if(Date.now()-last>60000){ss("owm-upd",String(Date.now()));location.reload();return;}}if(DASH)bar();},function(){});}catch(e){}}setTimeout(function(){chk(true);},1200);if(DASH){setInterval(function(){if(!document.hidden)chk(false);},60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk(false);});}})();</script>
 
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1766,12 +1766,12 @@ function viewDoc(kind,ref,ym){
       (splitPct(i)?"please find attached invoice "+i.number+" for "+money(invTotal(i))+". The upfront part ("+splitPct(i)+"%, "+money(depAmt(i))+") is due "+fmtDY(i.due)+", and the remaining "+money(invTotal(i)-depAmt(i))+" once the work is done.":
       "please find attached invoice "+i.number+" for "+money(invTotal(i))+", due "+fmtDY(i.due)+".")),subject:"Invoice "+i.number+" – One Way Media"};
   } else if(kind==="cal"){
-    var cc=ref?client(ref):null, mo=ym.ym||ym.from.slice(0,7); built=buildCalendar(ref,ym.from,ym.to); title=ref?"Posting calendar":"Team calendar"; sub=(cc?esc(cc.name)+" · ":"")+fmtM(mo);
+    var cc=ref?client(ref):null, mo=ym.ym||ym.from.slice(0,7); built=buildCalendar(ref,ym.from,ym.to); title=ref?"Posting calendar":"Team calendar"; var plab=calPeriodLabel(cc,ym); sub=(cc?esc(cc.name)+" · ":"")+plab;
     var sentOn=ref?calSentOn(ref,mo):"";
-    foot='<span class="pv-mnav"><button class="icon-btn" data-act="calPdfMonth" data-n="-1" aria-label="Previous month">'+ico("left")+'</button><b>'+fmtM(mo)+'</b><button class="icon-btn" data-act="calPdfMonth" data-n="1" aria-label="Next month">'+ico("right")+'</button></span>'+
+    foot='<span class="pv-mnav"><button class="icon-btn" data-act="calPdfMonth" data-n="-1" aria-label="Previous month">'+ico("left")+'</button><b>'+plab+'</b><button class="icon-btn" data-act="calPdfMonth" data-n="1" aria-label="Next month">'+ico("right")+'</button></span>'+
       (cc?'<button class="btn" data-act="bulkPlan" data-client="'+ref+'" data-m="'+mo+'">'+ico("cal")+'Edit plan</button>':'')+
       (cc?'<button class="btn" data-act="sendDocWa">'+ico("wa")+'WhatsApp'+(sentOn?' again':'')+'</button>':'')+(sentOn?'<span class="pill green">Sent '+fmtDY(sentOn)+'</span>':'');
-    CUR={kind:kind,id:ref,month:mo,phone:cc?cc.phone:"",email:cc?cc.email:"",first:cc?(cc.contact||"").split(" ")[0]:"",msg:"here is your posting calendar for "+fmtM(mo)+". The PDF is attached.",subject:"Your "+fmtM(mo)+" posting calendar – One Way Media"};
+    CUR={kind:kind,id:ref,month:mo,phone:cc?cc.phone:"",email:cc?cc.email:"",first:cc?(cc.contact||"").split(" ")[0]:"",msg:"here is your posting calendar for "+plab+". The PDF is attached.",subject:"Your "+plab+" posting calendar – One Way Media"};
   } else {
     var cl=client(ref); built=buildReport(ref,ym); title="Monthly report"; sub=esc(cl.name)+" · "+fmtM(ym);
     var rr=S.reports.find(function(r){ return r.clientId===ref && r.month===ym; });
@@ -1956,7 +1956,7 @@ function ccF(doc,fam,w,size){ doc.setFont(fam,w); doc.setFontSize(size); }
 function ccT(doc,c){ doc.setTextColor(c[0],c[1],c[2]); }
 function ccSp(doc,t,x,y,cs,right){ var w=doc.getTextWidth(t)+cs*(t.length-1); if(right) x-=w; doc.text(t,x,y,{charSpace:cs}); return w; }
 function ccFit(doc,t,w){ t=String(t||""); if(doc.getTextWidth(t)<=w) return t; while(t.length>1 && doc.getTextWidth(t+"…")>w) t=t.slice(0,-1); return t.replace(/\s+$/,"")+"…"; }
-function ccMD(s){ var d=parse(s); return d.toLocaleDateString("en-GB",{month:"short"})+" "+d.getDate(); }
+function ccMD(s){ var d=parse(s); return d.getDate()+" "+d.toLocaleDateString("en-GB",{month:"short"}); }
 function ccDDM(s){ var d=parse(s); return d.toLocaleDateString("en-GB",{weekday:"short"})+" "+d.getDate()+" "+d.toLocaleDateString("en-GB",{month:"short"}); }
 function ccList(a){ return a.length<2?a.join(""):a.slice(0,-1).join(", ")+" and "+a[a.length-1]; }
 function ccStatus(doc,x,y,done,label){ doc.setLineWidth(0.7);
@@ -2040,6 +2040,7 @@ function buildClientCal(cid,from,to){
     var top=y+LT;
     for(var d=0;d<7;d++){
       var ds=addDays(ws,d), x=M+d*(cw+4.6), list=byDay[ds]||[], inR=ds>=from&&ds<=to, wk=d>4;
+      if(!inR) continue;
       var pl=list.filter(function(e){ return e.type!=="shoot"; }), sl=list.filter(function(e){ return e.type==="shoot"; });
       if(list.length){ var bc=pl.length?(FM[kindOf(pl[0])].c||CC.navy):CC.navy; doc.setFillColor(255,255,255); doc.setDrawColor(bc[0],bc[1],bc[2]); doc.setLineWidth(1.1); doc.roundedRect(x,top,cw,h,7,7,"FD"); }
       else { doc.setDrawColor(CC.dash[0],CC.dash[1],CC.dash[2]); doc.setLineWidth(0.7); doc.setLineDashPattern([2.2,1.8],0); doc.roundedRect(x,top,cw,h,7,7,"S"); doc.setLineDashPattern([],0); }
@@ -3508,10 +3509,14 @@ function calListView(){
 }
 
 /* ---- PDF viewer for a month ---- */
-A.calPdfOpen=function(el){ var ym=el.dataset.m||calSendDefault(); viewDoc("cal",el.dataset.client||"",monthRange(ym)); };
-A.calPdf=function(el){ var cid=el.dataset.client||""; viewDoc("cal",cid,monthRange(cid?calSendDefault():ui.calMonth)); };
+function calPeriodDefault(c){ var k=curCycle(c), left=Math.round((parse(k.to)-parse(k.from<TODAY?TODAY:k.from))/864e5)+1; return left<7?cycleOf(c,ymAdd(k.ym,1)):k; }
+function calPeriodLabel(c,r){ return c&&c.id&&cycDay(c)!==1?fmtD(r.from)+" – "+fmtD(r.to)+" "+r.to.slice(0,4):fmtM(r.ym||r.from.slice(0,7)); }
+A.calPdfOpen=function(el){ var cid=el.dataset.client||"", c=cid?client(cid):null;
+  if(c&&c.id){ var vm=el.dataset.m; viewDoc("cal",cid,cycDay(c)===1&&vm?cycleOf(c,vm):calPeriodDefault(c)); return; }
+  viewDoc("cal","",monthRange(el.dataset.m||calSendDefault())); };
+A.calPdf=function(el){ var cid=el.dataset.client||"", c=cid?client(cid):null; if(c&&c.id){ viewDoc("cal",cid,calPeriodDefault(c)); return; } viewDoc("cal","",monthRange(ui.calMonth)); };
 A.calPdfTeam=function(){ viewDoc("cal","",monthRange(ui.calMonth)); };
-A.calPdfMonth=function(el){ if(!CUR||CUR.kind!=="cal") return; var ym=addMonths(CUR.month,+el.dataset.n); viewDoc("cal",CUR.id,monthRange(ym)); };
+A.calPdfMonth=function(el){ if(!CUR||CUR.kind!=="cal") return; var ym=addMonths(CUR.month,+el.dataset.n); viewDoc("cal",CUR.id,CUR.id?cycleOf(client(CUR.id),ym):monthRange(ym)); };
 A.calUnsent=function(el){ delete S.calSent[el.dataset.client+"|"+el.dataset.m]; save(); render(); toast("Marked as not sent"); };
 A.calView=function(el){ ui.calView=el.dataset.v; render(); };
 A.calNav2=function(el){ var k=el.dataset.k; ui[k]=addMonths(ui[k]||YM,+el.dataset.n); if(k==="calMonth") ui.selDay=ui.calMonth===YM?TODAY:ui.calMonth+"-01"; render(); };
