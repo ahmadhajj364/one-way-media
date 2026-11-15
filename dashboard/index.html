@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="owm-build" content="1794704856">
-<script>(function(){var B="1794704856",DASH=true;function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v);}catch(e){return null;}}function bar(){if(document.getElementById("owm-upd"))return;var d=document.createElement("div");d.id="owm-upd";d.setAttribute("style","position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;background:#0B2545;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font:600 14px/1.3 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)");d.innerHTML="<span>A new version is ready</span>";var b=document.createElement("button");b.textContent="Refresh";b.setAttribute("style","background:#1F9D55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer");b.onclick=function(){location.reload();};d.appendChild(b);document.body.appendChild(d);}function chk(first){try{fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():"";}).then(function(t){var m=/name="owm-build" content="(\d+)"/.exec(t);if(!m||+m[1]<=+B)return;if(first){var last=+ss("owm-upd")||0;if(Date.now()-last>60000){ss("owm-upd",String(Date.now()));location.reload();return;}}if(DASH)bar();},function(){});}catch(e){}}setTimeout(function(){chk(true);},1200);if(DASH){setInterval(function(){if(!document.hidden)chk(false);},60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk(false);});}})();</script>
+<meta name="owm-build" content="1794705163">
+<script>(function(){var B="1794705163",DASH=true;function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v);}catch(e){return null;}}function bar(){if(document.getElementById("owm-upd"))return;var d=document.createElement("div");d.id="owm-upd";d.setAttribute("style","position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;background:#0B2545;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font:600 14px/1.3 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)");d.innerHTML="<span>A new version is ready</span>";var b=document.createElement("button");b.textContent="Refresh";b.setAttribute("style","background:#1F9D55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer");b.onclick=function(){location.reload();};d.appendChild(b);document.body.appendChild(d);}function chk(first){try{fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():"";}).then(function(t){var m=/name="owm-build" content="(\d+)"/.exec(t);if(!m||+m[1]<=+B)return;if(first){var last=+ss("owm-upd")||0;if(Date.now()-last>60000){ss("owm-upd",String(Date.now()));location.reload();return;}}if(DASH)bar();},function(){});}catch(e){}}setTimeout(function(){chk(true);},1200);if(DASH){setInterval(function(){if(!document.hidden)chk(false);},60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk(false);});}})();</script>
 
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1817,6 +1817,7 @@ function calEvents(cid,from,to){ return S.events.filter(function(e){ return e.da
 function buildCalendar(cid,from,to){
   if(!pdfReady()) return null;
   if(cid) return buildClientCal(cid,from,to);
+  return buildTeamGrid(from,to);
   var doc=newPdf({unit:"pt",format:"a4",orientation:"landscape"});
   var PW=841.89, PH=595.28, M=34, team=!cid, c=team?null:client(cid);
   var evs=calEvents(cid,from,to), posts=evs.filter(function(e){ return e.type!=="shoot"; }), shoots=evs.filter(function(e){ return e.type==="shoot"; });
@@ -1975,6 +1976,112 @@ function ccStatus(doc,x,y,done,label){ doc.setLineWidth(0.7);
   else { doc.setDrawColor(CC.gray[0],CC.gray[1],CC.gray[2]); doc.circle(x+3.9,y-2.7,3.9,"S"); }
   if(label){ ccF(doc,"Figtree","400",7.6); ccT(doc,done?CC.green:CC.gray); doc.text(done?"Posted":"To post",x+11.2,y); }
   doc.setLineWidth(1); }
+/* ---------- team calendar PDF: one row per client, one column per day ---------- */
+function buildTeamGrid(from,to){
+  var doc=newPdf({unit:"pt",format:"a4",orientation:"landscape"}); ccFonts(doc);
+  var PW=842, PH=595.3, M=28, R=PW-M;
+  var hx=function(h){ h=String(h||"#0B2150").replace("#",""); if(h.length===3) h=h.replace(/(.)/g,"$1$1"); return [parseInt(h.substr(0,2),16)||0,parseInt(h.substr(2,2),16)||0,parseInt(h.substr(4,2),16)||0]; };
+  var fill=function(c){ doc.setFillColor(c[0],c[1],c[2]); }, draw=function(c){ doc.setDrawColor(c[0],c[1],c[2]); };
+  var days=[]; for(var d=from; d<=to; d=addDays(d,1)) days.push(d);
+  var evs=calEvents("",from,to), by={};
+  evs.forEach(function(e){ var k=e.clientId+"|"+e.date; (by[k]=by[k]||[]).push(e); });
+  var rows=S.clients.filter(function(c){ return c.status==="active" || evs.some(function(e){ return e.clientId===c.id; }); })
+    .sort(function(a,b){ return String(a.name).toLowerCase()<String(b.name).toLowerCase()?-1:1; });
+  var kindOf=function(e){ if(e.type==="shoot") return "Shoot"; var f=evFmt(e); return f==="Reel"||f==="Story"?f:"Post"; };
+  var ORD={Shoot:0,Reel:1,Post:2,Story:3};
+  var posts=evs.filter(function(e){ return e.type!=="shoot"; }).length, shoots=evs.length-posts;
+  var full=from.slice(8)==="01" && to===from.slice(0,7)+"-"+pad(daysIn(from.slice(0,7)));
+  var range=full?fmtM(from.slice(0,7)):ccMD(from)+" – "+ccMD(to);
+  var bg=function(){ fill(CC.bg); doc.rect(0,0,PW,PH,"F"); };
+  /* a small item marker: R / P / S, or a camera for shoots */
+  function chip(kind,x,y,s){
+    if(kind==="Shoot"){ fill(CC.chip); doc.roundedRect(x,y,s,s,1.8,1.8,"F");
+      fill(CC.navy); var bw=s*0.66, bh=s*0.44, bx=x+(s-bw)/2, by=y+s*0.34; doc.roundedRect(bx,by,bw,bh,0.8,0.8,"F"); doc.rect(bx+bw*0.18,by-s*0.1,bw*0.3,s*0.12,"F");
+      doc.setFillColor(255,255,255); doc.circle(bx+bw/2,by+bh/2,s*0.12,"F"); return; }
+    var L={Reel:"R",Post:"P",Story:"S"}[kind];
+    if(kind==="Story"){ doc.setFillColor(255,255,255); draw(CC.navy); doc.setLineWidth(0.7); doc.roundedRect(x+0.35,y+0.35,s-0.7,s-0.7,1.8,1.8,"FD"); ccT(doc,CC.navy); doc.setLineWidth(1); }
+    else { fill(kind==="Reel"?CC.navy:CC.green); doc.roundedRect(x,y,s,s,1.8,1.8,"F"); doc.setTextColor(255,255,255); }
+    ccF(doc,"Jost","600",s*0.62); doc.text(L,x+s/2,y+s*0.71,{align:"center"}); }
+  /* ---- header (first page) ---- */
+  bg();
+  doc.addImage(CAL_LOGO,"PNG",M,30,62,39);
+  var x0=M+76;
+  ccF(doc,"Jost","500",8.3); ccT(doc,CC.gray); ccSp(doc,"ONE WAY MEDIA · TEAM CALENDAR",x0,29.5,2.6);
+  var boxes=[["POSTS",posts,CC.navy],["SHOOTS",shoots,CC.green],["CLIENTS",rows.length,null]];
+  var bw=78,bh=42,gap=5,bx=R-boxes.length*bw-(boxes.length-1)*gap;
+  boxes.forEach(function(b,i){ var x=bx+i*(bw+gap), y=30;
+    if(b[2]){ fill(b[2]); doc.roundedRect(x,y,bw,bh,6,6,"F"); doc.setTextColor(255,255,255); }
+    else { doc.setFillColor(255,255,255); draw(CC.box); doc.setLineWidth(0.7); doc.roundedRect(x,y,bw,bh,6,6,"FD"); ccT(doc,CC.navy); doc.setLineWidth(1); }
+    ccF(doc,"Jost","500",16); doc.text(String(b[1]),x+10,y+20.5); ccF(doc,"Jost","500",6); ccSp(doc,b[0],x+10,y+33,1.3); });
+  var a=posts+" post"+(posts===1?"":"s")+" & "+shoots+" shoot"+(shoots===1?"":"s")+", ", tw=bx-x0-14, fs=20;
+  ccF(doc,"Jost","500",fs); while(fs>13 && doc.getTextWidth(a+range)>tw){ fs-=.5; ccF(doc,"Jost","500",fs); }
+  ccT(doc,CC.navy); doc.text(a,x0,50); ccT(doc,CC.green); doc.text(range,x0+doc.getTextWidth(a),50);
+  ccF(doc,"Figtree","400",8.6); ccT(doc,CC.gray); doc.text("One row per client and one column per day. Read across for a client's month, or down for the team's day.",x0,64);
+  fill(CC.navy); doc.rect(M,84,R-M,1.3,"F");
+  /* legend */
+  var lx=M, ly=100;
+  [["Reel","Reel"],["Post","Post / carousel"],["Story","Story"],["Shoot","Shoot day"]].forEach(function(k){ chip(k[0],lx,ly-7.6,9.5); ccF(doc,"Figtree","400",8); ccT(doc,CC.gray); doc.text(k[1],lx+13.5,ly); lx+=13.5+doc.getTextWidth(k[1])+14; });
+  fill(CC.green); doc.rect(lx,ly-8,2,10,"F"); ccF(doc,"Figtree","400",8); ccT(doc,CC.gray); doc.text("Client's month starts",lx+6,ly); lx+=6+doc.getTextWidth("Client's month starts")+14;
+  fill([232,235,241]); doc.rect(lx,ly-8,10,10,"F"); doc.text("Weekend",lx+14,ly);
+  /* ---- table ---- */
+  var nameW=132, totW=50, dw=(R-M-nameW-totW)/days.length, hh=27, teamH=22;
+  var top0=112, limit=PH-30;
+  function tableHead(y){
+    days.forEach(function(ds,i){ var x=M+nameW+i*dw, dd=parse(ds), wk=(dd.getDay()+6)%7>4;
+      if(ds===TODAY){ fill(CC.green); doc.roundedRect(x+1,y+1,dw-2,hh-2,3,3,"F"); }
+      ccF(doc,"Figtree","400",6.4); ccT(doc,ds===TODAY?[255,255,255]:(wk?CC.gray:CC.dim)); doc.text("MTWTFSS".charAt((dd.getDay()+6)%7),x+dw/2,y+10.5,{align:"center"});
+      ccF(doc,"Jost","500",dw<18?7.6:8.6); ccT(doc,ds===TODAY?[255,255,255]:CC.navy); doc.text(String(dd.getDate()),x+dw/2,y+21.5,{align:"center"}); });
+    ccF(doc,"Jost","600",6.6); ccT(doc,CC.gray); ccSp(doc,"CLIENT",M+4,y+18,1.4); ccSp(doc,"TOTAL",R-4,y+18,1.4,true);
+    return y+hh; }
+  var avail=function(y){ return limit-teamH-y; };
+  var rowH=rows.length?Math.max(18,Math.min(36,Math.floor(avail(top0+hh)/rows.length))):30;
+  var y=tableHead(top0), pageTop=y;
+  function weekendShade(y1,y2){ days.forEach(function(ds,i){ if((parse(ds).getDay()+6)%7>4){ fill([232,235,241]); doc.rect(M+nameW+i*dw,y1,dw,y2-y1,"F"); } }); }
+  function gridLines(y1,y2){ draw(CC.box); doc.setLineWidth(0.5); for(var i=0;i<=days.length;i++){ var x=M+nameW+i*dw; doc.line(x,y1,x,y2); } doc.setLineWidth(1); }
+  var pageRows=[], pages=[[]];
+  rows.forEach(function(c){ var cur=pages[pages.length-1], yy=pageTop+cur.length*rowH; if(yy+rowH>limit-teamH && cur.length){ pages.push([]); } pages[pages.length-1].push(c); });
+  pages.forEach(function(list,pi){
+    if(pi>0){ doc.addPage(); bg(); ccF(doc,"Jost","500",8.3); ccT(doc,CC.gray); ccSp(doc,("ONE WAY MEDIA · TEAM CALENDAR · "+range+" · continued").toUpperCase(),M,34,2.6); fill(CC.navy); doc.rect(M,44,R-M,1.3,"F"); y=tableHead(58); pageTop=y; }
+    var yEnd=pageTop+list.length*rowH;
+    doc.setFillColor(255,255,255); doc.rect(M,pageTop,R-M,yEnd-pageTop,"F");
+    weekendShade(pageTop,yEnd);
+    list.forEach(function(c,ri){ var ry=pageTop+ri*rowH, col=hx(c.color), cnt={Shoot:0,Reel:0,Post:0,Story:0};
+      if(ri%2===1){ doc.setFillColor(250,251,252); doc.rect(M,ry,nameW,rowH,"F"); doc.rect(R-totW,ry,totW,rowH,"F"); }
+      fill(col); doc.roundedRect(M+4,ry+rowH/2-4,8,8,2,2,"F");
+      var mid=cycDay(c)!==1, nmY=mid&&rowH>=26?ry+rowH/2-1:ry+rowH/2+3;
+      ccF(doc,"Figtree","600",8.6); ccT(doc,CC.navy); doc.text(ccFit(doc,c.name,nameW-22),M+17,nmY);
+      if(mid&&rowH>=26){ ccF(doc,"Figtree","400",6.6); ccT(doc,CC.gray); var cd=cycDay(c); doc.text("Month starts the "+cd+(cd%10===1&&cd!==11?"st":(cd%10===2&&cd!==12?"nd":(cd%10===3&&cd!==13?"rd":"th"))),M+17,nmY+9); }
+      days.forEach(function(ds,i){ var x=M+nameW+i*dw, list2=(by[c.id+"|"+ds]||[]).slice().sort(function(p,q){ return ORD[kindOf(p)]-ORD[kindOf(q)]; });
+        if(mid && +ds.slice(8)===Math.min(cycDay(c),daysIn(ds.slice(0,7)))){ fill(CC.green); doc.rect(x,ry+2,1.8,rowH-4,"F"); }
+        list2.forEach(function(e){ cnt[kindOf(e)]++; });
+        if(!list2.length) return;
+        /* fit the markers in the cell: stacked, then side by side, shrinking down to 6pt */
+        var n=list2.length, iw=dw-3, ih=rowH-4, g=1.2, sz=0, nc=1, nr=1;
+        for(var sTry=Math.min(11,iw); sTry>=6; sTry-=0.5){ var cc2=Math.max(1,Math.floor((iw+g)/(sTry+g))), rr2=Math.max(1,Math.floor((ih+g)/(sTry+g))); if(cc2*rr2>=n){ sz=sTry; nr=Math.min(rr2,n); nc=Math.ceil(n/nr); break; } }
+        var more=0; if(!sz){ sz=6; nc=Math.max(1,Math.floor((iw+g)/(sz+g))); nr=Math.max(1,Math.floor((ih+g)/(sz+g))); more=n-(nc*nr-1); n=nc*nr-1; }
+        var gw=nc*(sz+g)-g, gh=nr*(sz+g)-g, gx=x+(dw-gw)/2, gy=ry+(rowH-gh)/2;
+        for(var k=0;k<n;k++){ var ci=Math.floor(k/nr), rj=k%nr; chip(kindOf(list2[k]),gx+ci*(sz+g),gy+rj*(sz+g),sz); }
+        if(more>0){ var k2=n, ci2=Math.floor(k2/nr), rj2=k2%nr; ccF(doc,"Jost","600",5.6); ccT(doc,CC.navy); doc.text("+"+more,gx+ci2*(sz+g)+sz/2,gy+rj2*(sz+g)+sz*0.75,{align:"center"}); } });
+      var pn=cnt.Reel+cnt.Post+cnt.Story;
+      ccF(doc,"Figtree","600",8); ccT(doc,pn?CC.navy:CC.dim); doc.text(pn+" post"+(pn===1?"":"s"),R-4,ry+rowH/2+(cnt.Shoot&&rowH>=24?-1.5:3),{align:"right"});
+      if(cnt.Shoot&&rowH>=24){ ccF(doc,"Figtree","400",6.8); ccT(doc,CC.gray); doc.text(cnt.Shoot+" shoot"+(cnt.Shoot===1?"":"s"),R-4,ry+rowH/2+8,{align:"right"}); }
+      draw(CC.box); doc.setLineWidth(0.5); doc.line(M,ry+rowH,R,ry+rowH); doc.setLineWidth(1); });
+    gridLines(pageTop,yEnd);
+    draw(CC.box); doc.setLineWidth(0.7); doc.rect(M,pageTop,R-M,yEnd-pageTop,"S"); doc.line(M+nameW,pageTop,M+nameW,yEnd); doc.line(R-totW,pageTop,R-totW,yEnd); doc.setLineWidth(1);
+    y=yEnd;
+  });
+  if(!rows.length){ ccF(doc,"Figtree","400",9); ccT(doc,CC.gray); doc.text("No active clients yet.",M+4,y+18); y+=26; }
+  /* whole team per day */
+  var ty=y+3; fill(CC.navy); doc.roundedRect(M,ty,R-M,teamH-4,4,4,"F");
+  ccF(doc,"Jost","600",6.6); doc.setTextColor(255,255,255); ccSp(doc,"WHOLE TEAM / DAY",M+6,ty+11.4,1.2);
+  days.forEach(function(ds,i){ var x=M+nameW+i*dw, p=0, sh=0; evs.forEach(function(e){ if(e.date===ds){ if(e.type==="shoot") sh++; else p++; } });
+    if(!p&&!sh) return; ccF(doc,"Jost","600",7.6); doc.setTextColor(255,255,255); doc.text(String(p||""),x+dw/2-(sh?2.5:0),ty+12,{align:"center"});
+    if(sh){ doc.setFillColor(159,227,196); doc.circle(x+dw/2+(p?3.5:0),ty+9.2,1.9,"F"); } });
+  ccF(doc,"Jost","600",7.6); doc.setTextColor(255,255,255); var tsw=doc.getTextWidth(String(shoots)); doc.text(String(shoots),R-5,ty+12,{align:"right"}); doc.setFillColor(159,227,196); doc.circle(R-5-tsw-4,ty+9.2,1.9,"F"); doc.text(String(posts)+"  ",R-5-tsw-8,ty+12,{align:"right"});
+  ccF(doc,"Figtree","400",7.4); ccT(doc,CC.gray); doc.text("Prepared by One Way Media · green dot = shoot that day",M,PH-14);
+  var nm=full?fmtM(from.slice(0,7)).replace(/\s+/g,"-"):(ccMD(from)+"-to-"+ccMD(to)).replace(/\s+/g,"-");
+  return {doc:doc,name:"One-Way-Media-Team-Calendar-"+nm+".pdf"};
+}
 function buildClientCal(cid,from,to){
   if(!pdfReady()) return null;
   var doc=newPdf({unit:"pt",format:"a4",orientation:"landscape"}); ccFonts(doc);
