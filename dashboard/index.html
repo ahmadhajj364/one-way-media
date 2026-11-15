@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="owm-build" content="1794705588">
-<script>(function(){var B="1794705588",DASH=true;function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v);}catch(e){return null;}}function bar(){if(document.getElementById("owm-upd"))return;var d=document.createElement("div");d.id="owm-upd";d.setAttribute("style","position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;background:#0B2545;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font:600 14px/1.3 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)");d.innerHTML="<span>A new version is ready</span>";var b=document.createElement("button");b.textContent="Refresh";b.setAttribute("style","background:#1F9D55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer");b.onclick=function(){location.reload();};d.appendChild(b);document.body.appendChild(d);}function chk(first){try{fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():"";}).then(function(t){var m=/name="owm-build" content="(\d+)"/.exec(t);if(!m||+m[1]<=+B)return;if(first){var last=+ss("owm-upd")||0;if(Date.now()-last>60000){ss("owm-upd",String(Date.now()));location.reload();return;}}if(DASH)bar();},function(){});}catch(e){}}setTimeout(function(){chk(true);},1200);if(DASH){setInterval(function(){if(!document.hidden)chk(false);},60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk(false);});}})();</script>
+<meta name="owm-build" content="1794706064">
+<script>(function(){var B="1794706064",DASH=true;function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v);}catch(e){return null;}}function bar(){if(document.getElementById("owm-upd"))return;var d=document.createElement("div");d.id="owm-upd";d.setAttribute("style","position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;background:#0B2545;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font:600 14px/1.3 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)");d.innerHTML="<span>A new version is ready</span>";var b=document.createElement("button");b.textContent="Refresh";b.setAttribute("style","background:#1F9D55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer");b.onclick=function(){location.reload();};d.appendChild(b);document.body.appendChild(d);}function chk(first){try{fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():"";}).then(function(t){var m=/name="owm-build" content="(\d+)"/.exec(t);if(!m||+m[1]<=+B)return;if(first){var last=+ss("owm-upd")||0;if(Date.now()-last>60000){ss("owm-upd",String(Date.now()));location.reload();return;}}if(DASH)bar();},function(){});}catch(e){}}setTimeout(function(){chk(true);},1200);if(DASH){setInterval(function(){if(!document.hidden)chk(false);},60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk(false);});}})();</script>
 
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -4334,7 +4334,7 @@ var VCOLS="created_at,type,visitor,session,source,ref_host,device,page,campaign"
 function visLoad(force){
   if(!CLOUD.on || !CLOUD.user || VIS.loading) return;
   if(!force && VIS.data && VIS.loaded===VIS.days && Date.now()-VIS.at<60000) return;
-  VIS.loading=true; var days=VIS.days, since=new Date(Date.now()-days*864e5).toISOString();
+  VIS.loading=true; var days=VIS.days, since=(days===1?parse(TODAY):new Date(Date.now()-days*864e5)).toISOString();
   CLOUD.sb.from("site_events").select(VCOLS).neq("type","ping").gte("created_at",since).order("created_at",{ascending:true}).limit(50000).then(function(r){
     VIS.loading=false;
     if(r.error){ VIS.err=/relation|does not exist|schema cache/i.test(r.error.message||"")?"setup":"offline"; }
@@ -4392,6 +4392,7 @@ function visGoDay(d){ if(!d || d>TODAY) return; VIS.day=d; if(d.slice(0,7)!==VIS
 document.addEventListener("change",function(ev){ if(ev.target && ev.target.id==="visPick") visGoDay(ev.target.value); });
 A.visCal=function(el){ VIS.calYM=addMonths(VIS.calYM,+el.dataset.n); VIS.day=""; visCalLoad(); render(); };
 A.visDay=function(el){ var d=el.dataset.date; if(!d) return; VIS.day=VIS.day===d?"":d; if(d.slice(0,7)!==VIS.calYM){ VIS.calYM=d.slice(0,7); visCalLoad(); } render(); var p=document.getElementById("visDayPanel"); if(p) p.scrollIntoView({behavior:"smooth",block:"start"}); };
+function visSpan(){ return VIS.days===1?"today":"last "+VIS.days+" days"; }
 function vpct(a,b){ return b?Math.round(a/b*1000)/10+"%":"–"; }
 function uniqV(list){ var o={}; list.forEach(function(e){ o[e.visitor||e.session]=1; }); return Object.keys(o).length; }
 function lineChart(vals,tips,keys,H,act,labels){
@@ -4415,7 +4416,7 @@ function barsSVG(labels,vals,tips,keys,H,act){
     return '<g class="vb'+(keys&&keys[ix]===VIS.day?' sel':'')+'" data-tip="'+esc(tips[ix])+'"'+(act&&keys?' data-act="'+act+'" data-date="'+keys[ix]+'"':'')+'><rect x="'+(ix*slot)+'" y="0" width="'+slot+'" height="'+H+'" fill="transparent"/>'+(path?'<path d="'+path+'"/>':'')+'</g>'; }).join("")+'</svg>';
 }
 R_["w-visits"]=function(){
-  var seg='<div class="seg">'+[[7,"7 days"],[30,"30 days"],[90,"90 days"]].map(function(x){ return '<button data-act="visDays" data-v="'+x[0]+'" aria-pressed="'+(VIS.days===x[0])+'">'+x[1]+'</button>'; }).join("")+'</div>';
+  var seg='<div class="seg">'+[[1,"Today"],[7,"7 days"],[30,"30 days"],[90,"90 days"]].map(function(x){ return '<button data-act="visDays" data-v="'+x[0]+'" aria-pressed="'+(VIS.days===x[0])+'">'+x[1]+'</button>'; }).join("")+'</div>';
   var pick='<label class="vpick"><span>Check a date</span><input type="date" id="visPick" max="'+TODAY+'" value="'+(VIS.day||"")+'" aria-label="Check visitors on a date"></label>';
   var h=head("Visitors","Who visits the website, where they come from, and how many ask for a quote.",pick+seg+'<button class="btn" data-act="visRefresh">Refresh</button>');
   if(!CLOUD.on || !CLOUD.user) return h+'<section class="card"><div class="card-b muted">Visitor stats appear here on the live dashboard once you are signed in.</div></section>';
@@ -4427,22 +4428,25 @@ R_["w-visits"]=function(){
   var ev=VIS.data, visits=ev.filter(function(e){ return e.type==="visit"; }), quotes=ev.filter(function(e){ return e.type==="quote"; }), wa=ev.filter(function(e){ return e.type==="wa_click"; });
   var people=uniqV(visits), reqs=quotes.length;
   var html=h+live+'<div class="grid4">'+
-    kpi("Visitors",String(people),visits.length+" visit"+(visits.length===1?"":"s")+" · last "+VIS.days+" days")+
+    kpi("Visitors",String(people),visits.length+" visit"+(visits.length===1?"":"s")+" · "+visSpan())+
     kpi("Quote requests",String(reqs),"sent from the website form")+
     kpi("Conversion rate",vpct(reqs,people),"visitors who asked for a quote")+
     kpi("WhatsApp clicks",String(wa.length),vpct(uniqV(wa),people)+" of visitors")+'</div>';
   /* visitors per day (click a bar to open that day) */
+  if(VIS.days===1){ var nowH=new Date().getHours(), hv={}, hrs=[]; for(var h0=0;h0<=nowH;h0++) hrs.push(0);
+    visits.forEach(function(e){ var t=new Date(e.created_at); if(iso(t)!==TODAY) return; var k=t.getHours(); hv[k]=hv[k]||{}; hv[k][e.visitor||e.session]=1; }); for(var kk in hv) if(+kk<hrs.length) hrs[kk]=Object.keys(hv[kk]).length;
+    html+='<section class="card"><div class="card-h"><h2>Visitors today, by hour</h2><span class="muted">updates live</span></div><div class="card-b"><div class="vchart">'+lineChart(hrs,hrs.map(function(v,i){ return pad(i)+":00 – "+pad(i)+":59: "+v+" visitor"+(v===1?"":"s"); }),null,170)+'</div><div class="vaxis"><span>00:00</span><span>'+pad(nowH)+':00</span></div></div></section>'; }
   var days=[], by={}; for(var k=VIS.days-1;k>=0;k--){ var d=addDays(TODAY,-k); days.push(d); by[d]={}; }
   visits.forEach(function(e){ var d=iso(new Date(e.created_at)); if(by[d]) by[d][e.visitor||e.session]=1; });
   var vals=days.map(function(d){ return Object.keys(by[d]).length; });
-  html+='<section class="card"><div class="card-h"><h2>Visitors per day</h2><span class="muted">Tap a day to see it in detail</span></div><div class="card-b"><div class="vchart">'+lineChart(vals,days.map(function(d,i){ return fmtDay(d)+": "+vals[i]+" visitor"+(vals[i]===1?"":"s"); }),days,170,"visDay")+'</div><div class="vaxis"><span>'+fmtD(days[0])+'</span><span>'+fmtD(days[days.length-1])+'</span></div></div></section>';
+  if(VIS.days!==1) html+='<section class="card"><div class="card-h"><h2>Visitors per day</h2><span class="muted">Tap a day to see it in detail</span></div><div class="card-b"><div class="vchart">'+lineChart(vals,days.map(function(d,i){ return fmtDay(d)+": "+vals[i]+" visitor"+(vals[i]===1?"":"s"); }),days,170,"visDay")+'</div><div class="vaxis"><span>'+fmtD(days[0])+'</span><span>'+fmtD(days[days.length-1])+'</span></div></div></section>';
   html+=visListHTML(ev);
   /* calendar */
   html+=visCalendarHTML();
   /* where they come from */
   var rows=VSRC.map(function(sx){ var vv=visits.filter(function(e){ return (e.source||"direct")===sx[0]; }); return {n:sx[1],p:uniqV(vv),q:quotes.filter(function(e){ return (e.source||"direct")===sx[0]; }).length}; });
   var top=Math.max(1,Math.max.apply(null,rows.map(function(r){ return r.p; })));
-  html+='<section class="card"><div class="card-h"><h2>Where visitors come from</h2><span class="muted">last '+VIS.days+' days</span></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Source</th><th class="num">Visitors</th><th class="num">Quote requests</th><th class="num">Conversion</th></tr></thead><tbody>'+
+  html+='<section class="card"><div class="card-h"><h2>Where visitors come from</h2><span class="muted">'+visSpan()+'</span></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Source</th><th class="num">Visitors</th><th class="num">Quote requests</th><th class="num">Conversion</th></tr></thead><tbody>'+
     rows.map(function(r){ return '<tr><td data-l="Source"><div class="vsrc"><b>'+r.n+'</b><span class="vbar"><i style="width:'+Math.round(r.p/top*100)+'%"></i></span></div></td><td class="num" data-l="Visitors">'+r.p+' <span class="muted">'+vpct(r.p,people)+'</span></td><td class="num" data-l="Quote requests">'+r.q+'</td><td class="num" data-l="Conversion">'+vpct(r.q,r.p)+'</td></tr>'; }).join("")+'</tbody></table></div></section>';
   var refs={}; visits.forEach(function(e){ if(e.source==="other" && e.ref_host) refs[e.ref_host]=(refs[e.ref_host]||0)+1; });
   var rl=Object.keys(refs).sort(function(a,b){ return refs[b]-refs[a]; }).slice(0,6), mob=visits.filter(function(e){ return e.device==="mobile"; }).length;
@@ -4465,7 +4469,7 @@ function visListHTML(ev){
   var days=[]; ev.forEach(function(e){ if(e.type!=="visit") return; var d=iso(new Date(e.created_at)); if(days.indexOf(d)<0) days.push(d); }); days.sort().reverse();
   var N=VIS.listN||7, shown=days.slice(0,N);
   var html='<section class="card"><div class="card-h"><h2>Visits day by day</h2><span class="muted">newest first</span></div>';
-  if(!days.length) return html+'<div class="empty">No visits in the last '+VIS.days+' days.</div></section>';
+  if(!days.length) return html+'<div class="empty">No visits '+visSpan()+' yet.</div></section>';
   html+='<div class="vlist">'+shown.map(function(d){ var rows=visRowsFor(ev,d), ppl={}; ev.forEach(function(e){ if(e.type==="visit"&&iso(new Date(e.created_at))===d) ppl[e.visitor||e.session]=1; });
     var nq=rows.filter(function(r){ return r.quote; }).length, nw=rows.filter(function(r){ return r.wa; }).length, all=VIS.open&&VIS.open[d], lim=all?rows.length:10;
     return '<div class="vl-day"><div class="vl-h"><b>'+esc(fmtDay(d))+'</b><span>'+Object.keys(ppl).length+' visitor'+(Object.keys(ppl).length===1?'':'s')+(nq?' · <em class="vl-q">'+nq+' quote request'+(nq===1?'':'s')+'</em>':'')+(nw?' · '+nw+' WhatsApp click'+(nw===1?'':'s'):'')+'</span><button class="btn sm ghost" data-act="visDay" data-date="'+d+'">Details</button></div>'+
