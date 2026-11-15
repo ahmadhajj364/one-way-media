@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="owm-build" content="1794703720">
-<script>(function(){var B="1794703720",DASH=true;function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v);}catch(e){return null;}}function bar(){if(document.getElementById("owm-upd"))return;var d=document.createElement("div");d.id="owm-upd";d.setAttribute("style","position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;background:#0B2545;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font:600 14px/1.3 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)");d.innerHTML="<span>A new version is ready</span>";var b=document.createElement("button");b.textContent="Refresh";b.setAttribute("style","background:#1F9D55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer");b.onclick=function(){location.reload();};d.appendChild(b);document.body.appendChild(d);}function chk(first){try{fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():"";}).then(function(t){var m=/name="owm-build" content="(\d+)"/.exec(t);if(!m||+m[1]<=+B)return;if(first){var last=+ss("owm-upd")||0;if(Date.now()-last>60000){ss("owm-upd",String(Date.now()));location.reload();return;}}if(DASH)bar();},function(){});}catch(e){}}setTimeout(function(){chk(true);},1200);if(DASH){setInterval(function(){if(!document.hidden)chk(false);},60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk(false);});}})();</script>
+<meta name="owm-build" content="1794704455">
+<script>(function(){var B="1794704455",DASH=true;function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v);}catch(e){return null;}}function bar(){if(document.getElementById("owm-upd"))return;var d=document.createElement("div");d.id="owm-upd";d.setAttribute("style","position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;background:#0B2545;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font:600 14px/1.3 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)");d.innerHTML="<span>A new version is ready</span>";var b=document.createElement("button");b.textContent="Refresh";b.setAttribute("style","background:#1F9D55;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer");b.onclick=function(){location.reload();};d.appendChild(b);document.body.appendChild(d);}function chk(first){try{fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():"";}).then(function(t){var m=/name="owm-build" content="(\d+)"/.exec(t);if(!m||+m[1]<=+B)return;if(first){var last=+ss("owm-upd")||0;if(Date.now()-last>60000){ss("owm-upd",String(Date.now()));location.reload();return;}}if(DASH)bar();},function(){});}catch(e){}}setTimeout(function(){chk(true);},1200);if(DASH){setInterval(function(){if(!document.hidden)chk(false);},60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk(false);});}})();</script>
 
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -3410,6 +3410,7 @@ function evKind(e){ return e.type==="shoot"?"Shoot":(evFmt(e)||"Post"); }
 function calSendDefault(){ return +TODAY.slice(8)>=15?addMonths(YM,1):YM; }
 function monthRange(ym){ return {from:ym+"-01",to:ym+"-"+pad(daysIn(ym)),ym:ym}; }
 function calSentOn(cid,ym){ return (S.calSent||{})[cid+"|"+ym]||""; }
+function calCountsR(cid,from,to){ var r={Reel:0,Post:0,Story:0,Shoot:0}; S.events.forEach(function(e){ if(e.clientId===cid && e.date>=from && e.date<=to){ var k=evKind(e); r[k]=(r[k]||0)+1; } }); return r; }
 function calCounts(cid,ym){ var r={Reel:0,Post:0,Story:0,Shoot:0}; S.events.forEach(function(e){ if(e.clientId===cid && e.date.slice(0,7)===ym){ var k=evKind(e); r[k]=(r[k]||0)+1; } }); return r; }
 function countsText(r){ var p=[]; if(r.Reel) p.push(r.Reel+" reel"+(r.Reel>1?"s":"")); if(r.Post) p.push(r.Post+" post"+(r.Post>1?"s":"")); if(r.Story) p.push(r.Story+" stor"+(r.Story>1?"ies":"y")); if(r.Shoot) p.push(r.Shoot+" shoot"+(r.Shoot>1?"s":"")); return p.join(" · "); }
 var ST_DOT={ready:"st-ready",scheduled:"st-sched"};
@@ -3471,13 +3472,13 @@ function calClientsView(){
   var ym=ui.calMonth, act=S.clients.filter(function(c){ return c.status==="active"; });
   var sent=act.filter(function(c){ return calSentOn(c.id,ym); }).length;
   return '<section class="card"><div class="cal-head">'+calMonthNav("calMonth")+'<span style="flex:1"></span><span class="cal-count"><b>'+sent+' of '+act.length+'</b> calendars sent</span></div>'+
-    '<div class="list send-list">'+(act.length? act.map(function(c){ var r=calCounts(c.id,ym), on=calSentOn(c.id,ym), any=r.Reel+r.Post+r.Story+r.Shoot, pl=planFor(c);
+    '<div class="list send-list">'+(act.length? act.map(function(c){ var k=cycleOf(c,ym), mid=cycDay(c)!==1, r=calCountsR(c.id,k.from,k.to), on=calSentOn(c.id,ym), any=r.Reel+r.Post+r.Story+r.Shoot, pl=planFor(c), plab=mid?fmtD(k.from)+" – "+fmtD(k.to):fmtM(ym).split(" ")[0];
       var planned=(+pl.reels||0)+(+pl.posts||0)+(+pl.stories||0), have=r.Reel+r.Post+r.Story, short=planned&&have<planned;
       var sched=S.events.filter(function(e){ return e.clientId===c.id && e.type==="post" && e.date.slice(0,7)===ym && (e.done||postStage(e)==="scheduled"); }).length;
-      return '<div class="li cl-pick" data-act="calOpenClient" data-id="'+c.id+'" style="cursor:pointer">'+cbadge(c)+'<div class="li-main"><div class="li-t">'+esc(c.name)+'</div><div class="li-s">'+(any?countsText(r):'<span style="color:var(--red)">Nothing planned for '+fmtM(ym).split(" ")[0]+' yet</span>')+(short?' · <span style="color:var(--amber)">'+(planned-have)+' short of the plan</span>':'')+'</div></div>'+
+      return '<div class="li cl-pick" data-act="calOpenClient" data-id="'+c.id+'" style="cursor:pointer">'+cbadge(c)+'<div class="li-main"><div class="li-t">'+esc(c.name)+'</div><div class="li-s">'+(any?(mid?'<b style="font-weight:600">'+plab+':</b> ':'')+countsText(r):'<span style="color:var(--red)">Nothing planned for '+plab+' yet</span>')+(short?' · <span style="color:var(--amber)">'+(planned-have)+' short of the plan</span>':'')+'</div></div>'+
         '<div class="li-acts">'+(on?'<span class="pill green">Sent '+fmtDY(on)+'</span>':'<span class="pill">Not sent</span>')+
         '<button class="btn sm primary" data-act="calOpenClient" data-id="'+c.id+'">'+ico("cal")+'Open calendar</button>'+
-        '<button class="btn sm" data-act="calPdfOpen" data-client="'+c.id+'" data-m="'+ym+'"'+(any?'':' disabled')+'>'+ico("dl")+'PDF & send</button></div></div>'; }).join("")
+        '<button class="btn sm" data-act="calPdfOpen" data-client="'+c.id+'" data-m="'+ym+'" data-pm="'+ym+'"'+(any?'':' disabled')+'>'+ico("dl")+'PDF & send</button></div></div>'; }).join("")
       : '<div class="empty">No active clients.</div>')+'</div></section>';
 }
 
@@ -3523,7 +3524,7 @@ function calListView(){
 function calPeriodDefault(c){ var k=curCycle(c), left=Math.round((parse(k.to)-parse(k.from<TODAY?TODAY:k.from))/864e5)+1; return left<7?cycleOf(c,ymAdd(k.ym,1)):k; }
 function calPeriodLabel(c,r){ return c&&c.id&&cycDay(c)!==1?fmtD(r.from)+" – "+fmtD(r.to)+" "+r.to.slice(0,4):fmtM(r.ym||r.from.slice(0,7)); }
 A.calPdfOpen=function(el){ var cid=el.dataset.client||"", c=cid?client(cid):null;
-  if(c&&c.id){ var vm=el.dataset.m; viewDoc("cal",cid,cycDay(c)===1&&vm?cycleOf(c,vm):calPeriodDefault(c)); return; }
+  if(c&&c.id){ var vm=el.dataset.m; viewDoc("cal",cid,el.dataset.pm?cycleOf(c,el.dataset.pm):(cycDay(c)===1&&vm?cycleOf(c,vm):calPeriodDefault(c))); return; }
   viewDoc("cal","",monthRange(el.dataset.m||calSendDefault())); };
 A.calPdf=function(el){ var cid=el.dataset.client||"", c=cid?client(cid):null; if(c&&c.id){ viewDoc("cal",cid,calPeriodDefault(c)); return; } viewDoc("cal","",monthRange(ui.calMonth)); };
 A.calPdfTeam=function(){ viewDoc("cal","",monthRange(ui.calMonth)); };
